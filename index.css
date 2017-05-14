@@ -1,4 +1,45 @@
-asd{
-    font-size: 123px;
-    
+
+html,body{
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
+cursor: default;
 }
+div.fileArea{
+    height: 200px;
+    width: 400px;
+    border: 12;
+    border-style: solid;
+    overflow: hidden;
+}
+div.fileBody{
+    height: 178px;
+    overflow: scroll;  
+}
+table{
+    padding: 0px;
+    border: 0px;
+    margin: 0px;
+    width: 100%;
+    word-break:break-all;
+    text-overflow: ellipsis;
+	
+}
+tr{
+    padding: 0px;
+    height: 20px;
+    overflow: auto;    
+}
+tr:hover {  
+    background-color: #01f0F0;  
+    color: #fff;  
+    cursor:hand;  
+}
+td{
+    height: 20px;
+    padding: 0px;
+}
+th,td{text-overflow : clip}
+th.col0,td.col0{max-width:20px;min-width:20px; width: 20px}
+th.col1,td.col1{min-width:calc(100% - 160px);max-width:calc(100% - 160px);width: calc(100% - 160px)}
+th.col3,td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}

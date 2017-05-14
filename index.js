@@ -9,15 +9,15 @@ url_button.addEventListener('click', function () { checkUrl(input_ele.value) });
 function checkUrl(url) {
     var url1 = String(url);
     console.log(url1);
-    if(url1.match(/^\\\\\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)!=null){
-        shell.showItemInFolder('\\10.10.20.42\share')
+    if (url1.match(/^\\\\\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/) != null) {
+        // shell.showItemInFolder('\\10.10.20.42\share')
     }
 }
 //本地文件写入
 var path = require('path');
-var _path = path.join(__dirname, '..', input_ele.value);
+var _path = path.join(__dirname, '.', '/Musics');
 // var path1 = "d:\\ProjectsSpace\\ElectronProjects\\ElectronTest2\\app\\html\\config\\record.txt";
-console.log(_path);//测试路径对不对的
+// console.log(_path);//测试路径对不对的
 var fs = require('fs');
 // fs.readFile(_path, 'utf8', function (err, data) {
 // if (err) return console.log(err);
@@ -27,16 +27,19 @@ var fs = require('fs');
 // if (!err)
 //     console.log("写入成功！")
 // })
-fs.readdir('\\\\10.10.20.42\\Musics\\', function(err, files) {  
+fs.readdir(_path, function (err, files) {
     console.log(files)
     var audio = document.getElementById('audio_source');
-    audio.setAttribute('src','http://yinyueshiting.baidu.com/data2/music/122873158/4904681494442861128.mp3')
-        // if (err) {  
-        //     console.log('read dir error');  
-        // } else {  
-        //     files.forEach(function(item) {  
-        //         console.log(item);
-        //     });
-        // }
+    audio.setAttribute('src', _path + '/' + files[0])
+    fs.stat(_path + '/' + files[0], function (err, stat) {
+        console.log(stat);
+    });
+    // if (err) {  
+    //     console.log('read dir error');  
+    // } else {  
+    //     files.forEach(function(item) {  
+    //         console.log(item);
+    //     });
+    // }
 })
 
