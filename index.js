@@ -27,13 +27,34 @@ var fs = require('fs');
 // if (!err)
 //     console.log("写入成功！")
 // })
+
 fs.readdir(_path, function (err, files) {
     console.log(files)
     var audio = document.getElementById('audio_source');
-    audio.setAttribute('src', _path + '/' + files[0])
-    fs.stat(_path + '/' + files[0], function (err, stat) {
-        console.log(stat);
-    });
+    for (var i = 0; i < files.length; i++) {
+        audio.setAttribute('src', _path + '/' + files[0])
+        mySound = new Audio(_path + '\\' + files[i]);
+        mySound.controls = true
+        mySound.preload = 'meta'
+        document.body.appendChild(mySound)
+        console.log(mySound.du)
+        // mySound.onload = function(){
+        //     console.log(this.duration)
+        // }
+        var fileList = document.querySelector('#fileListTable');
+        var files_tr = document.createElement('tr')
+        // var files_td = document.createElement('td')
+        files_tr.innerHTML =    `
+                                <td class="col0">
+                                    <image src="./res/pause.png" size="0.3"></image>
+                                </td>
+                                <td class="col1">`+files[i]+`</td>
+                                <td class="col2">`+'123'+`</td>
+                                <td class="col3">`+fileinfo(_path + '/' + files[i])+`</td>
+                                `
+        files_tr.addEventListener('dblclick',function(){console.log(files_tr.getElementsByClassName('col1').innerHTML);;})
+        fileList.appendChild(files_tr)
+    }
     // if (err) {  
     //     console.log('read dir error');  
     // } else {  
@@ -42,4 +63,6 @@ fs.readdir(_path, function (err, files) {
     //     });
     // }
 })
-
+function fileinfo(dir_str){
+    return (fs.statSync(dir_str).size/1024/1024).toFixed(2).toString()+"M"
+}

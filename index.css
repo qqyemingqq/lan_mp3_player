@@ -14,7 +14,7 @@ div.fileArea{
 }
 div.fileBody{
     height: 178px;
-    overflow: scroll;  
+    overflow-y: scroll;  
 }
 table{
     padding: 0px;
@@ -28,7 +28,8 @@ table{
 tr{
     padding: 0px;
     height: 20px;
-    overflow: auto;    
+    overflow: auto;
+    transition: all .2s ease; 
 }
 tr:hover {  
     background-color: #01f0F0;  
