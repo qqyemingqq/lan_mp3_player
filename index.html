@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <title>局域网音乐播放器</title>
   <link rel="stylesheet" href="index.css">
+  <!--<script language="javascript" src="jquery-3.2.1.min.js"></script>-->
 </head>
 
 <body>
@@ -24,31 +25,25 @@
     </div>
     <div class="fileBody">
       <table id="fileListTable">
-        <!--<tr>
-          <td class="col0">
-            <image src="./res/pause.png" size="0.3"></image>
-          </td>
-          <td class="col1">Celin1111asdasfsddsfgsdfas11111111ee.mp3</td>
-          <td class="col2">12:34</td>
-          <td class="col3">12.5M</td>
-        </tr>
-        <tr>
-          <td class="col0">
-            <image src="./res/pause.png" size="0.3"></image>
-          </td>
-          <td class="col1">Celinee.mp3</td>
-          <td class="col2">12:34</td>
-          <td class="col3">12.5M</td>
-        </tr>
-        <tr>-->
-
+        <!-- AUTO ADD-->
       </table>
     </div>
-    <script src="index.js" type="text/javascript"></script>
-    <script class="doubleClickToPlay"></script>
-    <audio controls>
-      <source id="audio_source" src="" type="audio/mpeg">
-    </audio>
+  </div>
+  <div id="playController">
+    <image id="playButtonRes" src="./res/flatLight14.png" size="1"></image>
+  </div>
+  <div class="player">
+    <div class="slider">
+      <div class="buffer"></div>
+      <div class="processor"></div>
+      <div class="controller"></div>
+    </div>
+  </div>
+
+  <!--<audio controls>
+    <source id="audio_source" src="" type="audio/mpeg">
+  </audio>-->
+  <script src="index.js" type="text/javascript"></script>
 </body>
 
 </html>

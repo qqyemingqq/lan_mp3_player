@@ -23,7 +23,6 @@ table{
     width: 100%;
     word-break:break-all;
     text-overflow: ellipsis;
-	
 }
 tr{
     padding: 0px;
@@ -44,3 +43,53 @@ th,td{text-overflow : clip}
 th.col0,td.col0{max-width:20px;min-width:20px; width: 20px}
 th.col1,td.col1{min-width:calc(100% - 160px);max-width:calc(100% - 160px);width: calc(100% - 160px)}
 th.col3,td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
+
+.player{
+    /*margin-top: 200px;*/
+    width: 500px;
+    height: 45px;
+    background-color: #2d2d2d;
+    border-top: 1px solid #4a4a4a;
+    border-bottom: 1px solid #4a4a4a;
+    position: fixed;
+    /*bottom: 50%;*/
+}
+.slider{
+    width: 80%;
+    height: 100px;
+    background-color: #181818;
+    border-top: 500px;
+    height: 10px;
+    background-color: #181818;
+    border-top: 1px solid #0b0b0b;
+    border-bottom: 1px solid #4a4a4a;
+    border-radius: 6px;
+    margin: 20px auto;
+    position: relative;
+}
+.slider>.buffer{
+    width: 60%;
+    height: 100%;
+    background-color: #535353;
+    border-radius: 6px;
+    position: absolute;
+}
+.slider>.processor{
+    width: 8px;
+    height: 100%;
+    background-color: #c70c0c;
+    border-radius: 6px;
+    position: absolute;
+}
+.slider>.controller{
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border: 10px solid #f3f3f6;
+    background-color: rgba(255,255,255,0);
+    border-radius:50%;
+    -webkit-border-radius:50%;
+    -moz-border-radius:50%;
+    top: -8px;
+    left:-8px;
+}

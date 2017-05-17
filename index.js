@@ -3,8 +3,8 @@
 var input_ele = document.getElementById('url_input');
 console.log(input_ele);
 
-var url_button = document.getElementById('url_button');
-url_button.addEventListener('click', function () { checkUrl(input_ele.value) });
+// var url_button = document.getElementById('url_button');
+// url_button.addEventListener('click', function () { checkUrl(input_ele.value) });
 
 function checkUrl(url) {
     var url1 = String(url);
@@ -32,28 +32,27 @@ fs.readdir(_path, function (err, files) {
     console.log(files)
     var audio = document.getElementById('audio_source');
     for (var i = 0; i < files.length; i++) {
-        audio.setAttribute('src', _path + '/' + files[0])
-        mySound = new Audio(_path + '\\' + files[i]);
-        mySound.controls = true
-        mySound.preload = 'meta'
-        document.body.appendChild(mySound)
-        console.log(mySound.du)
-        // mySound.onload = function(){
-        //     console.log(this.duration)
-        // }
-        var fileList = document.querySelector('#fileListTable');
-        var files_tr = document.createElement('tr')
-        // var files_td = document.createElement('td')
-        files_tr.innerHTML =    `
-                                <td class="col0">
-                                    <image src="./res/pause.png" size="0.3"></image>
-                                </td>
-                                <td class="col1">`+files[i]+`</td>
-                                <td class="col2">`+'123'+`</td>
-                                <td class="col3">`+fileinfo(_path + '/' + files[i])+`</td>
-                                `
-        files_tr.addEventListener('dblclick',function(){console.log(files_tr.getElementsByClassName('col1').innerHTML);;})
-        fileList.appendChild(files_tr)
+        // audio.setAttribute('src', _path + '/' + files[0])
+        // mySound = new Audio(_path + '\\' + files[i]);
+        // mySound.controls = true
+        // mySound.preload = 'meta'
+        // document.body.appendChild(mySound)
+        // // console.log(mySound.duration)
+        // // mySound.onload = function(){
+        // //     console.log(this.duration)
+        // // }
+        // var fileList = document.querySelector('#fileListTable');
+        // var files_tr = document.createElement('tr')
+        // // var files_td = document.createElement('td')
+        // files_tr.innerHTML =    `
+        //                         <td class="col0">   
+        //                         </td>
+        //                         <td class="col1">`+files[i]+`</td>
+        //                         <td class="col2">`+'123'+`</td>
+        //                         <td class="col3">`+fileinfo(_path + '/' + files[i])+`</td>
+        //                         `
+        // files_tr.addEventListener('dblclick',function(){console.log(files_tr.getElementsByClassName('col1').innerHTML);;})
+        // fileList.appendChild(files_tr)
     }
     // if (err) {  
     //     console.log('read dir error');  
@@ -63,6 +62,69 @@ fs.readdir(_path, function (err, files) {
     //     });
     // }
 })
-function fileinfo(dir_str){
-    return (fs.statSync(dir_str).size/1024/1024).toFixed(2).toString()+"M"
+function fileinfo(dir_str) {
+    return (fs.statSync(dir_str).size / 1024 / 1024).toFixed(2).toString() + "M"
 }
+
+// play button function
+var playButton = document.querySelector('#playButtonRes')
+playButton.addEventListener('pointerup', function () {
+    var playButtonRes = document.querySelector('#playButtonRes')
+    if (playButtonRes.getAttribute('src') == './res/flatLight14.png') {
+        playButtonRes.setAttribute('src', './res/flatLight12.png')
+    } else {
+        playButtonRes.setAttribute('src', './res/flatLight14.png')
+    }
+
+})
+// progress funciton
+var slider = document.querySelector('.slider');
+var buffer = document.querySelector('.buffer');
+var step = 0.05;
+var timer = window.setInterval(function () {
+    var sw = slider.offsetWidth;
+    var w = buffer.offsetWidth;
+    buffer.style.width = w + sw * step + 'px';
+    if (w + sw * step == sw) {
+        window.clearInterval(timer);
+    }
+}, 100);
+// var processor = $('#processor');
+// var controller = $('#controller');
+var processor = document.querySelector('.processor')
+var controller = document.querySelector('.controller')
+
+var mouseDown = false;
+var mousePositionX = 0;
+function dragDropHandler(event) {
+    switch (event.type) {
+        case 'mousedown': {
+            mouseDown = true;
+            mousePositionX = event.clientX;
+            console.log('mousedown' + mouseDown);
+            break;
+        }
+        case 'mousemove': {
+            console.log('mousemove' + mouseDown);
+            if (mouseDown) {
+                mousePositionX
+                var tx = event.clientX - 70;
+                var halfW = controller.offsetWidth >> 1;
+                controller.style.left = event.clientX + 'px'; // + halfW
+                processor.style.left = tx + halfW * 3 + 'px'
+            }
+            break;
+        }
+        case 'mouseup': {
+            console.log('mouseup' + mouseDown);
+
+            mouseDown = false;
+            break;
+        }
+    }
+}
+slider.addEventListener('mousedown', dragDropHandler);
+window.addEventListener('mousemove', dragDropHandler);
+window.addEventListener('mouseup', dragDropHandler);
+
+
