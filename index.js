@@ -95,29 +95,37 @@ var processor = document.querySelector('.processor')
 var controller = document.querySelector('.controller')
 
 var mouseDown = false;
-var mousePositionX = 0;
+var controllerPositionX = 0;
 function dragDropHandler(event) {
     switch (event.type) {
         case 'mousedown': {
             mouseDown = true;
-            mousePositionX = event.clientX;
-            console.log('mousedown' + mouseDown);
+            console.log('mousedown:' + mouseDown);
+            var tx = event.clientX - 70;
+            controller.style.left = event.clientX- (controller.parentElement.offsetWidth-controller.offsetWidth)/2 + 'px'
+            // processor.style.left = tx + halfW * 3 + 'px'
             break;
         }
         case 'mousemove': {
-            console.log('mousemove' + mouseDown);
+            console.log('mousemove:' + mouseDown);
             if (mouseDown) {
-                mousePositionX
                 var tx = event.clientX - 70;
                 var halfW = controller.offsetWidth >> 1;
-                controller.style.left = event.clientX + 'px'; // + halfW
-                processor.style.left = tx + halfW * 3 + 'px'
+                var offectX = (controller.parentElement.offsetWidth*0.4-controller.offsetWidth)/2
+                controller.style.left = event.clientX - offectX + 'px';
+                console.log(offectX)
+                // processor.style.left = tx + halfW * 3 + 'px'
             }
             break;
         }
         case 'mouseup': {
-            console.log('mouseup' + mouseDown);
-
+            console.log('mouseup:' + mouseDown);
+            var mousePosText = document.createElement('lable')
+            mousePosText.innerText = event.clientX + ":" + event.clientY
+            document.body.appendChild(mousePosText)
+            mousePosText.style.position = 'absolute'
+            mousePosText.style.top = event.clientY + 'px'
+            mousePosText.style.left = event.clientX + 'px'
             mouseDown = false;
             break;
         }
