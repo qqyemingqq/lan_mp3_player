@@ -1,0 +1,23 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+input_ele	/Users/ye/Desktop/lan_mp3_player/index.js	/^var input_ele = document.getElementById('url_input');$/;"	variable	line:3
+checkUrl	/Users/ye/Desktop/lan_mp3_player/index.js	/^function checkUrl(url) {$/;"	function	line:9
+checkUrl	/Users/ye/Desktop/lan_mp3_player/index.js	/^function checkUrl(url) {$/;"	function	line:9
+path	/Users/ye/Desktop/lan_mp3_player/index.js	/^var path = require('path');$/;"	variable	line:17
+_path	/Users/ye/Desktop/lan_mp3_player/index.js	/^var _path = path.join(__dirname, '.', '\/Musics');$/;"	variable	line:18
+fs	/Users/ye/Desktop/lan_mp3_player/index.js	/^var fs = require('fs');$/;"	variable	line:21
+fileinfo	/Users/ye/Desktop/lan_mp3_player/index.js	/^function fileinfo(dir_str) {$/;"	function	line:66
+slider	/Users/ye/Desktop/lan_mp3_player/index.js	/^var slider = document.querySelector('.slider');$/;"	variable	line:72
+buffer	/Users/ye/Desktop/lan_mp3_player/index.js	/^var buffer = document.querySelector('.buffer');$/;"	variable	line:73
+step	/Users/ye/Desktop/lan_mp3_player/index.js	/^var step = 0.05;$/;"	variable	line:74
+timer	/Users/ye/Desktop/lan_mp3_player/index.js	/^var timer = window.setInterval(function() {$/;"	variable	line:75
+processor	/Users/ye/Desktop/lan_mp3_player/index.js	/^var processor = document.querySelector('.processor')$/;"	variable	line:85
+controllerPositionX	/Users/ye/Desktop/lan_mp3_player/index.js	/^var controllerPositionX = 0;$/;"	variable	line:96
+dragDropHandler	/Users/ye/Desktop/lan_mp3_player/index.js	/^function dragDropHandler(event) {$/;"	function	line:98
+switch	/Users/ye/Desktop/lan_mp3_player/index.js	/^  switch (event.type) {$/;"	function	line:99
+dragDropHandler	/Users/ye/Desktop/lan_mp3_player/index.js	/^function dragDropHandler(event) {$/;"	function	line:98
+mousePosText	/Users/ye/Desktop/lan_mp3_player/index.js	/^        var mousePosText = document.createElement('lable')$/;"	variable	line:128

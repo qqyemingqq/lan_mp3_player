@@ -1,0 +1,22 @@
+{
+  "libs": [
+    "browser"
+  ],
+  "loadEagerly": [
+    "index.js",
+    "main.js"
+  ],
+  "plugins": {
+    "requirejs": {
+      "baseURL": "./",
+      "paths": {}
+    },
+    "node": {
+      "dontLoad": "",
+      "load": "",
+      "modules": ""
+    }
+  },
+  "ecmaVersion": "6",
+  "dontLoad": []
+}
