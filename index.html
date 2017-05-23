@@ -9,6 +9,7 @@
 </head>
 
 <body>
+  <label id="mousePosition"></label>
   <text id="url_text">请输入共享地址：</text>
   <input id="url_input" type="text" name="input_name" value="\\10.10.20.42\share"></input>
   <button id="url_button" type="submit" value="连接">连接</button>
@@ -29,16 +30,16 @@
       </table>
     </div>
   </div>
-  <div id="playController">
-    <image id="playButtonRes" src="./res/flatLight14.png" size="1"></image>
-  </div>
   <div class="player">
-    <div class="playerButton"></div>
+    <image class="playButton" src="./res/flatLight14.png"></image>
+    <image class="volumeButton" src="./res/flatLight11.png"></image>
     <div class="slider">
       <div class="buffer"></div>
       <div class="processor"></div>
       <div class="controller"></div>
     </div>
+    <text class="musicTimer"></text>
+    <audio class="musicPlayer"> </audio>
   </div>
 
   <!--<audio controls>

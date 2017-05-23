@@ -49,9 +49,23 @@ th.col3,td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
     position: fixed;
     /*bottom: 50%;*/
 }
+.playButton,.volumeButton{
+  position: relative;
+  /*left:50%;*/
+  top: -5px;
+  /*background-image: url('./res/flatLight14.png');*/
+}
+.musicTimer{
+  color: #fff;
+  text-shadow: 1px 1px 3px #4a4a4a;
+  top: -24px;
+  position: relative;
+  left: 7px;
+}
 .slider{
-    width: 80%;
-    height: 100px;
+    display:inline-block;
+    width: 60%;
+    height: 90px;
     background-color: #181818;
     border-top: 500px;
     height: 10px;
@@ -60,14 +74,9 @@ th.col3,td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
     border-bottom: 1px solid #4a4a4a;
     border-radius: 6px;
     margin: 20px auto;
+    margin-left: 10px;
+    top: -3px;
     position: relative;
-}
-.slider>.playerButton{
-  width: 50px;
-  height: 50px;
-  position: absolute;
-  /*background-image: url('./res/flatLight14.png');*/
-
 }
 .slider>.buffer{
     width: 60%;

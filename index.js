@@ -1,6 +1,7 @@
 // const {shell} = require('electron')
 // console.log( )
 var input_ele = document.getElementById('url_input');
+var musicPlayer = document.querySelector('.musicPlayer');
 console.log(input_ele);
 
 // var url_button = document.getElementById('url_button');
@@ -30,43 +31,45 @@ var fs = require('fs');
 
 fs.readdir(_path, function(err, files) {
   console.log(files)
-  // var audio = document.getElementById('audio_source');
-  // for (var i = 0; i < files.length; i++) {
-  // audio.setAttribute('src', _path + '/' + files[0])
-  // mySound = new Audio(_path + '\\' + files[i]);
-  // mySound.controls = true
-  // mySound.preload = 'meta'
-  // document.body.appendChild(mySound)
-  // // console.log(mySound.duration)
-  // // mySound.onload = function(){
-  // //     console.log(this.duration)
-  // // }
-  // var fileList = document.querySelector('#fileListTable');
-  // var files_tr = document.createElement('tr')
-  // // var files_td = document.createElement('td')
-  // files_tr.innerHTML =    `
-  //                         <td class="col0">
-  //                         </td>
-  //                         <td class="col1">`+files[i]+`</td>
-  //                         <td class="col2">`+'123'+`</td>
-  //                         <td class="col3">`+fileinfo(_path + '/' + files[i])+`</td>
-  //                         `
-  // files_tr.addEventListener('dblclick',function(){console.log(files_tr.getElementsByClassName('col1').innerHTML);;})
-  // fileList.appendChild(files_tr)
-  // }
-  // if (err) {
-  //     console.log('read dir error');
-  // } else {
-  //     files.forEach(function(item) {
-  //         console.log(item);
-  //     });
-  // }
+  for (var i = 0; i < files.length; i++) {
+    // mySound = new Audio(_path + '\\' + files[i]);
+    // mySound.controls = true
+    // mySound.preload = 'meta'
+    // document.body.appendChild(mySound)
+    var fileList = document.querySelector('#fileListTable');
+    var files_tr = document.createElement('tr')
+    files_tr.innerHTML = `
+                        <td class="col0">
+                        </td>
+                        <td class="col1">` + files[i] + `</td>
+                        <td class="col2">` + '123' + `</td>
+                        <td class="col3">` + fileinfo(_path + '/' + files[i]) + `</td>
+                        `
+    files_tr.addEventListener('dblclick', function() {
+      musicPlayer.setAttribute('src', _path + '/' + files_tr.getElementsByClassName('col1')[0].innerText)
+      musicPlayer.play()
+
+      musicTimer.innerText = musicPlayer.duration
+    })
+    fileList.appendChild(files_tr)
+    // }
+    // if (err) {
+    //     console.log('read dir error');
+    // } else {
+    //     files.forEach(function(item) {
+    //         console.log(item);
+    //     });
+    // }
+  }
 })
 
 function fileinfo(dir_str) {
   return (fs.statSync(dir_str).size / 1024 / 1024).toFixed(2).toString() + "M"
 }
 
+var mousePosition = document.querySelector('#mousePosition');
+mousePosition.style.position = 'absolute'
+console.log(mousePosition)
 // play button function
 // progress funciton
 var slider = document.querySelector('.slider');
@@ -82,15 +85,17 @@ var timer = window.setInterval(function() {
 }, 100);
 // var processor = $('#processor');
 // var controller = $('#controller');
-var processor = document.querySelector('.processor')
-var controller = document.querySelector('.controller')
-var playButton = document.querySelector('.playerButton')
-playButton.style.backgroundImage = ('./res/flatLight14.png')
+var processor = document.querySelector('.processor');
+var controller = document.querySelector('.controller');
+var playButton = document.querySelector('.playButton');
+playButton.style.backgroundImage = ('./res/flatLight14.png');
 playButton.addEventListener('pointerup', function() {
   console.log(playButton)
 })
-// var playerButton
 
+var volumeButton = document.querySelector('.volumeButton');
+var musicTimer = document.querySelector('.musicTimer');
+musicTimer.innerText = '12:12';
 
 var mouseDown = false;
 var controllerPositionX = 0;
@@ -100,8 +105,7 @@ function dragDropHandler(event) {
     case 'mousedown':
       {
         mouseDown = true;
-        console.log('mousedown:' + mouseDown);
-        var offectX = (controller.parentElement.offsetWidth * 0.4 - controller.offsetWidth) / 2
+        var offectX = (controller.parentElement.offsetWidth * 0.4 - controller.offsetWidth) / 2;
         if (event.clientX - offectX <= slider.offsetWidth && event.clientX - offectX >= 0) {
           controller.style.left = event.clientX - offectX + 'px';
         }
@@ -110,28 +114,21 @@ function dragDropHandler(event) {
       }
     case 'mousemove':
       {
-        console.log('mousemove:' + mouseDown);
+        mousePosition.style.top = event.clientY + 15 + 'px';
+        mousePosition.style.left = event.clientX + 5 + 'px';
+        mousePosition.innerText = '(' + event.clientX + ',' + event.clientY + ')'
         if (mouseDown) {
           var halfW = controller.offsetWidth >> 1;
-          var offectX = (controller.parentElement.offsetWidth * 0.4 - controller.offsetWidth) / 2
+          var offectX = controller.parentElement.offsetWidth * 0.2 - halfW + 88;
           if (event.clientX - offectX <= slider.offsetWidth - halfW && event.clientX - offectX >= 0 - halfW) {
             controller.style.left = event.clientX - offectX + 'px';
             processor.style.width = event.clientX - offectX + halfW + 'px';
           }
-          console.log(offectX)
         }
         break;
       }
     case 'mouseup':
       {
-        console.log('mouseup:' + mouseDown);
-        var mousePosText = document.createElement('lable')
-        mousePosText.innerText = event.clientX + ":" + event.clientY
-        document.body.appendChild(mousePosText)
-        mousePosText.style.position = 'absolute'
-        mousePosText.style.top = event.clientY + 'px'
-        mousePosText.style.left = event.clientX + 'px'
-
         mouseDown = false;
         break;
       }
