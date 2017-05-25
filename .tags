@@ -1,70 +1,20 @@
-html,body	/Users/ye/Desktop/lan_mp3_player/index.css	/^html,body{$/;"	function	line:2
-.fileArea	/Users/ye/Desktop/lan_mp3_player/index.css	/^.fileArea{$/;"	function	line:8
-.fileBody	/Users/ye/Desktop/lan_mp3_player/index.css	/^.fileBody{$/;"	function	line:14
-table	/Users/ye/Desktop/lan_mp3_player/index.css	/^table{$/;"	function	line:18
-tr	/Users/ye/Desktop/lan_mp3_player/index.css	/^tr{$/;"	function	line:23
-tr:hover	/Users/ye/Desktop/lan_mp3_player/index.css	/^tr:hover {$/;"	function	line:28
-td	/Users/ye/Desktop/lan_mp3_player/index.css	/^td{$/;"	function	line:33
-th,td	/Users/ye/Desktop/lan_mp3_player/index.css	/^th,td{text-overflow : clip}$/;"	function	line:37
-th.col0,td.col0	/Users/ye/Desktop/lan_mp3_player/index.css	/^th.col0,td.col0{max-width:20px;min-width:20px; width: 20px}$/;"	function	line:38
-th.col1,td.col1	/Users/ye/Desktop/lan_mp3_player/index.css	/^th.col1,td.col1{min-width:calc(100% - 160px);max-width:calc(100% - 160px);width: calc(100% - 160px)}$/;"	function	line:39
-th.col3,td.col3,th.col2,td.col2	/Users/ye/Desktop/lan_mp3_player/index.css	/^th.col3,td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}$/;"	function	line:40
-.player	/Users/ye/Desktop/lan_mp3_player/index.css	/^.player{$/;"	function	line:42
-.playButton,.volumeButton	/Users/ye/Desktop/lan_mp3_player/index.css	/^.playButton,.volumeButton{$/;"	function	line:52
-.musicTimer	/Users/ye/Desktop/lan_mp3_player/index.css	/^.musicTimer{$/;"	function	line:58
-.slider	/Users/ye/Desktop/lan_mp3_player/index.css	/^.slider{$/;"	function	line:65
-.slider>.buffer	/Users/ye/Desktop/lan_mp3_player/index.css	/^.slider>.buffer{$/;"	function	line:81
-.slider>.processor	/Users/ye/Desktop/lan_mp3_player/index.css	/^.slider>.processor{$/;"	function	line:88
-.slider>.controller	/Users/ye/Desktop/lan_mp3_player/index.css	/^.slider>.controller{$/;"	function	line:95
-html	/Users/ye/Desktop/lan_mp3_player/index.html	/^<html>$/;"	function	line:2
-head	/Users/ye/Desktop/lan_mp3_player/index.html	/^<head>$/;"	function	line:4
-meta	/Users/ye/Desktop/lan_mp3_player/index.html	/^  <meta charset="UTF-8">$/;"	function	line:5
-title	/Users/ye/Desktop/lan_mp3_player/index.html	/^  <title>局域网音乐播放器<\/title>$/;"	function	line:6
-link	/Users/ye/Desktop/lan_mp3_player/index.html	/^  <link rel="stylesheet" href="index.css">$/;"	function	line:7
-body	/Users/ye/Desktop/lan_mp3_player/index.html	/^<body>$/;"	function	line:11
-label	/Users/ye/Desktop/lan_mp3_player/index.html	/^  <label id="mousePosition"><\/label>$/;"	function	line:12
-text	/Users/ye/Desktop/lan_mp3_player/index.html	/^  <text id="url_text">请输入共享地址：<\/text>$/;"	function	line:13
-input	/Users/ye/Desktop/lan_mp3_player/index.html	/^  <input id="url_input" type="text" name="input_name" value="\\\\10.10.20.42\\share"><\/input>$/;"	function	line:14
-button	/Users/ye/Desktop/lan_mp3_player/index.html	/^  <button id="url_button" type="submit" value="连接">连接<\/button>$/;"	function	line:15
-div	/Users/ye/Desktop/lan_mp3_player/index.html	/^  <div class="fileArea">$/;"	function	line:16
-div	/Users/ye/Desktop/lan_mp3_player/index.html	/^    <div class="fileHead">$/;"	function	line:17
-table	/Users/ye/Desktop/lan_mp3_player/index.html	/^      <table>$/;"	function	line:18
-tr	/Users/ye/Desktop/lan_mp3_player/index.html	/^        <tr>$/;"	function	line:19
-th	/Users/ye/Desktop/lan_mp3_player/index.html	/^          <th class="col0"><\/th>$/;"	function	line:20
-th	/Users/ye/Desktop/lan_mp3_player/index.html	/^          <th class="col1">文件名<\/th>$/;"	function	line:21
-th	/Users/ye/Desktop/lan_mp3_player/index.html	/^          <th class="col2">时间<\/th>$/;"	function	line:22
-th	/Users/ye/Desktop/lan_mp3_player/index.html	/^          <th class="col3">大小<\/th>$/;"	function	line:23
-div	/Users/ye/Desktop/lan_mp3_player/index.html	/^    <div class="fileBody">$/;"	function	line:27
-table	/Users/ye/Desktop/lan_mp3_player/index.html	/^      <table id="fileListTable">$/;"	function	line:28
-div	/Users/ye/Desktop/lan_mp3_player/index.html	/^  <div class="player">$/;"	function	line:33
-image	/Users/ye/Desktop/lan_mp3_player/index.html	/^    <image class="playButton" src=".\/res\/flatLight14.png"><\/image>$/;"	function	line:34
-image	/Users/ye/Desktop/lan_mp3_player/index.html	/^    <image class="volumeButton" src=".\/res\/flatLight11.png"><\/image>$/;"	function	line:35
-div	/Users/ye/Desktop/lan_mp3_player/index.html	/^    <div class="slider">$/;"	function	line:36
-div	/Users/ye/Desktop/lan_mp3_player/index.html	/^      <div class="buffer"><\/div>$/;"	function	line:37
-div	/Users/ye/Desktop/lan_mp3_player/index.html	/^      <div class="processor"><\/div>$/;"	function	line:38
-div	/Users/ye/Desktop/lan_mp3_player/index.html	/^      <div class="controller"><\/div>$/;"	function	line:39
-text	/Users/ye/Desktop/lan_mp3_player/index.html	/^    <text class="musicTimer"><\/text>$/;"	function	line:41
-audio	/Users/ye/Desktop/lan_mp3_player/index.html	/^    <audio class="musicPlayer"> <\/audio>$/;"	function	line:42
-source	/Users/ye/Desktop/lan_mp3_player/index.html	/^    <source id="audio_source" src="" type="audio\/mpeg">$/;"	function	line:46
-script	/Users/ye/Desktop/lan_mp3_player/index.html	/^  <script src="index.js" type="text\/javascript"><\/script>$/;"	function	line:48
-input_ele	/Users/ye/Desktop/lan_mp3_player/index.js	/^var input_ele = document.getElementById('url_input');$/;"	variable	line:3
-musicPlayer	/Users/ye/Desktop/lan_mp3_player/index.js	/^var musicPlayer = document.querySelector('.musicPlayer');$/;"	variable	line:4
-checkUrl	/Users/ye/Desktop/lan_mp3_player/index.js	/^function checkUrl(url) {$/;"	function	line:10
-checkUrl	/Users/ye/Desktop/lan_mp3_player/index.js	/^function checkUrl(url) {$/;"	function	line:10
-path	/Users/ye/Desktop/lan_mp3_player/index.js	/^var path = require('path');$/;"	variable	line:18
-_path	/Users/ye/Desktop/lan_mp3_player/index.js	/^var _path = path.join(__dirname, '.', '\/Musics');$/;"	variable	line:19
-fs	/Users/ye/Desktop/lan_mp3_player/index.js	/^var fs = require('fs');$/;"	variable	line:22
-fileinfo	/Users/ye/Desktop/lan_mp3_player/index.js	/^function fileinfo(dir_str) {$/;"	function	line:66
-mousePosition	/Users/ye/Desktop/lan_mp3_player/index.js	/^var mousePosition = document.querySelector('#mousePosition');$/;"	variable	line:70
-buffer	/Users/ye/Desktop/lan_mp3_player/index.js	/^var buffer = document.querySelector('.buffer');$/;"	variable	line:76
-step	/Users/ye/Desktop/lan_mp3_player/index.js	/^var step = 0.05;$/;"	variable	line:77
-timer	/Users/ye/Desktop/lan_mp3_player/index.js	/^var timer = window.setInterval(function() {$/;"	variable	line:78
-processor	/Users/ye/Desktop/lan_mp3_player/index.js	/^var processor = document.querySelector('.processor');$/;"	variable	line:88
-controller	/Users/ye/Desktop/lan_mp3_player/index.js	/^var controller = document.querySelector('.controller');$/;"	variable	line:89
-playButton	/Users/ye/Desktop/lan_mp3_player/index.js	/^var playButton = document.querySelector('.playButton');$/;"	variable	line:90
-musicTimer	/Users/ye/Desktop/lan_mp3_player/index.js	/^var musicTimer = document.querySelector('.musicTimer');$/;"	variable	line:97
-mouseDown	/Users/ye/Desktop/lan_mp3_player/index.js	/^var mouseDown = false;$/;"	variable	line:100
-controllerPositionX	/Users/ye/Desktop/lan_mp3_player/index.js	/^var controllerPositionX = 0;$/;"	variable	line:101
-dragDropHandler	/Users/ye/Desktop/lan_mp3_player/index.js	/^function dragDropHandler(event) {$/;"	function	line:103
-switch	/Users/ye/Desktop/lan_mp3_player/index.js	/^  switch (event.type) {$/;"	function	line:104
-dragDropHandler	/Users/ye/Desktop/lan_mp3_player/index.js	/^function dragDropHandler(event) {$/;"	function	line:103
+musicPlayer	/Users/ye/Desktop/lan_mp3_player/index.js	/^var musicPlayer = document.querySelector('.musicPlayer');$/;"	variable	line:3
+checkUrl	/Users/ye/Desktop/lan_mp3_player/index.js	/^function checkUrl(url) {$/;"	function	line:8
+checkUrl	/Users/ye/Desktop/lan_mp3_player/index.js	/^function checkUrl(url) {$/;"	function	line:8
+path	/Users/ye/Desktop/lan_mp3_player/index.js	/^var path = require('path');$/;"	variable	line:16
+_path	/Users/ye/Desktop/lan_mp3_player/index.js	/^var _path = path.join(__dirname, '.', '\/Musics');$/;"	variable	line:17
+fs	/Users/ye/Desktop/lan_mp3_player/index.js	/^var fs = require('fs');$/;"	variable	line:20
+fileinfo	/Users/ye/Desktop/lan_mp3_player/index.js	/^function fileinfo(dir_str) {$/;"	function	line:63
+mousePosition	/Users/ye/Desktop/lan_mp3_player/index.js	/^var mousePosition = document.querySelector('#mousePosition');$/;"	variable	line:67
+buffer	/Users/ye/Desktop/lan_mp3_player/index.js	/^var buffer = document.querySelector('.buffer');$/;"	variable	line:73
+step	/Users/ye/Desktop/lan_mp3_player/index.js	/^var step = 0.05;$/;"	variable	line:74
+timer	/Users/ye/Desktop/lan_mp3_player/index.js	/^var timer = window.setInterval(function() {$/;"	variable	line:75
+processor	/Users/ye/Desktop/lan_mp3_player/index.js	/^var processor = document.querySelector('.processor');$/;"	variable	line:85
+controller	/Users/ye/Desktop/lan_mp3_player/index.js	/^var controller = document.querySelector('.controller');$/;"	variable	line:86
+playButton	/Users/ye/Desktop/lan_mp3_player/index.js	/^var playButton = document.querySelector('.playButton');$/;"	variable	line:87
+musicTimer	/Users/ye/Desktop/lan_mp3_player/index.js	/^var musicTimer = document.querySelector('.musicTimer');$/;"	variable	line:94
+mouseDown	/Users/ye/Desktop/lan_mp3_player/index.js	/^var mouseDown = false;$/;"	variable	line:97
+controllerPositionX	/Users/ye/Desktop/lan_mp3_player/index.js	/^var controllerPositionX = 0;$/;"	variable	line:98
+dragDropHandler	/Users/ye/Desktop/lan_mp3_player/index.js	/^function dragDropHandler(event) {$/;"	function	line:100
+switch	/Users/ye/Desktop/lan_mp3_player/index.js	/^  switch (event.type) {$/;"	function	line:101
+dragDropHandler	/Users/ye/Desktop/lan_mp3_player/index.js	/^function dragDropHandler(event) {$/;"	function	line:100

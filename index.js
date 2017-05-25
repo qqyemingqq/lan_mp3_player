@@ -1,11 +1,12 @@
 // const {shell} = require('electron')
 // console.log( )
-var input_ele = document.getElementById('url_input');
-var musicPlayer = document.querySelector('.musicPlayer');
-console.log(input_ele);
 
-// var url_button = document.getElementById('url_button');
-// url_button.addEventListener('click', function () { checkUrl(input_ele.value) });
+
+
+var musicPlayer = document.querySelector('.musicPlayer');
+
+var url_button = document.getElementById('url_button');
+url_button.addEventListener('click', function () { console.log(musicPlayer.duration) });
 
 function checkUrl(url) {
   var url1 = String(url);
@@ -17,52 +18,40 @@ function checkUrl(url) {
 //本地文件写入
 var path = require('path');
 var _path = path.join(__dirname, '.', '/Musics');
-// var path1 = "d:\\ProjectsSpace\\ElectronProjects\\ElectronTest2\\app\\html\\config\\record.txt";
-// console.log(_path);//测试路径对不对的
 var fs = require('fs');
-// fs.readFile(_path, 'utf8', function (err, data) {
-// if (err) return console.log(err);
-// });
 
-// fs.writeFile(_path, "electron + Javascript", function (err) {
-// if (!err)
-//     console.log("写入成功！")
-// })
-
-fs.readdir(_path, function(err, files) {
+fs.readdir(_path, function (err, files) {
   console.log(files)
   for (var i = 0; i < files.length; i++) {
-    // mySound = new Audio(_path + '\\' + files[i]);
-    // mySound.controls = true
-    // mySound.preload = 'meta'
-    // document.body.appendChild(mySound)
     var fileList = document.querySelector('#fileListTable');
     var files_tr = document.createElement('tr')
+    fileList.appendChild(files_tr)
     files_tr.innerHTML = `
-                        <td class="col0">
-                        </td>
+                        <td class="col0"></td>
                         <td class="col1">` + files[i] + `</td>
                         <td class="col2">` + '123' + `</td>
                         <td class="col3">` + fileinfo(_path + '/' + files[i]) + `</td>
                         `
-    files_tr.addEventListener('dblclick', function() {
+    files_tr.addEventListener('dblclick', function () {
       musicPlayer.setAttribute('src', _path + '/' + files_tr.getElementsByClassName('col1')[0].innerText)
       musicPlayer.play()
-
-      musicTimer.innerText = musicPlayer.duration
     })
-    fileList.appendChild(files_tr)
-    // }
-    // if (err) {
-    //     console.log('read dir error');
-    // } else {
-    //     files.forEach(function(item) {
-    //         console.log(item);
-    //     });
-    // }
   }
 })
+var musicDuration = window.setInterval(function () {
+  musicTimer.innerText = secToTimeFormat(musicPlayer.currentTime) +'/'+secToTimeFormat(musicPlayer.duration)
+  if(secToTimeFormat(musicPlayer.currentTime)!=secToTimeFormat(musicPlayer.duration)){
+    
+  }
+}, 1000);
 
+function secToTimeFormat(time){
+  if(typeof(time)=='number'){
+    var sec=time%60;
+    var min=time/60;
+    return (min.toFixed(0)+':'+sec.toFixed(0))
+  }
+}
 function fileinfo(dir_str) {
   return (fs.statSync(dir_str).size / 1024 / 1024).toFixed(2).toString() + "M"
 }
@@ -70,12 +59,10 @@ function fileinfo(dir_str) {
 var mousePosition = document.querySelector('#mousePosition');
 mousePosition.style.position = 'absolute'
 console.log(mousePosition)
-// play button function
-// progress funciton
 var slider = document.querySelector('.slider');
 var buffer = document.querySelector('.buffer');
 var step = 0.05;
-var timer = window.setInterval(function() {
+var timer = window.setInterval(function () {
   var sw = slider.offsetWidth;
   var w = buffer.offsetWidth;
   buffer.style.width = w + sw * step + 'px';
@@ -83,13 +70,11 @@ var timer = window.setInterval(function() {
     window.clearInterval(timer);
   }
 }, 100);
-// var processor = $('#processor');
-// var controller = $('#controller');
 var processor = document.querySelector('.processor');
 var controller = document.querySelector('.controller');
 var playButton = document.querySelector('.playButton');
 playButton.style.backgroundImage = ('./res/flatLight14.png');
-playButton.addEventListener('pointerup', function() {
+playButton.addEventListener('pointerup', function () {
   console.log(playButton)
 })
 
@@ -137,3 +122,4 @@ function dragDropHandler(event) {
 controller.addEventListener('mousedown', dragDropHandler);
 window.addEventListener('mousemove', dragDropHandler);
 window.addEventListener('mouseup', dragDropHandler);
+
