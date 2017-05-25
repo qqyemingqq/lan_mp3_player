@@ -35,21 +35,30 @@ fs.readdir(_path, function (err, files) {
     files_tr.addEventListener('dblclick', function () {
       musicPlayer.setAttribute('src', _path + '/' + files_tr.getElementsByClassName('col1')[0].innerText)
       musicPlayer.play()
+      createInterval();
     })
   }
 })
-var musicDuration = window.setInterval(function () {
-  musicTimer.innerText = secToTimeFormat(musicPlayer.currentTime) +'/'+secToTimeFormat(musicPlayer.duration)
-  if(secToTimeFormat(musicPlayer.currentTime)!=secToTimeFormat(musicPlayer.duration)){
-    
-  }
-}, 1000);
+function createInterval() {
+  var musicDuration = window.setInterval(function () {
+    if (musicPlayer.duration) {
+      musicTimer.innerText = secToTimeFormat(musicPlayer.currentTime) + '/' + secToTimeFormat(musicPlayer.duration)
+      if(musicPlayer.ended){
+        resetMusicTimer();
+      window.clearInterval(musicDuration);
+        
+      }
+    }
+  }, 1000);
+}
 
-function secToTimeFormat(time){
-  if(typeof(time)=='number'){
-    var sec=time%60;
-    var min=time/60;
-    return (min.toFixed(0)+':'+sec.toFixed(0))
+function secToTimeFormat(time) {
+  if (typeof (time) == 'number') {
+    var sec = (time % 60).toFixed(0);
+    var min = (time / 60).toFixed(0);
+    if (min < 10) min = '0' + min;
+    if (sec < 10) sec = '0' + sec;
+    return (min + ':' + sec)
   }
 }
 function fileinfo(dir_str) {
@@ -66,7 +75,8 @@ var timer = window.setInterval(function () {
   var sw = slider.offsetWidth;
   var w = buffer.offsetWidth;
   buffer.style.width = w + sw * step + 'px';
-  if (w + sw * step == sw) {
+  if (w + sw * step >= sw) {
+    buffer.style.width = sw + 'px';
     window.clearInterval(timer);
   }
 }, 100);
@@ -75,12 +85,15 @@ var controller = document.querySelector('.controller');
 var playButton = document.querySelector('.playButton');
 playButton.style.backgroundImage = ('./res/flatLight14.png');
 playButton.addEventListener('pointerup', function () {
-  console.log(playButton)
+  console.log(playButton);
 })
 
 var volumeButton = document.querySelector('.volumeButton');
 var musicTimer = document.querySelector('.musicTimer');
-musicTimer.innerText = '12:12';
+resetMusicTimer();
+function resetMusicTimer() {
+  musicTimer.innerText = '00:00/00:00';
+}
 
 var mouseDown = false;
 var controllerPositionX = 0;
