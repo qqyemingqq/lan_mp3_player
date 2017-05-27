@@ -33,23 +33,27 @@ fs.readdir(_path, function (err, files) {
                         <td class="col3">` + fileinfo(_path + '/' + files[i]) + `</td>
                         `
     files_tr.addEventListener('dblclick', function () {
-      musicPlayer.setAttribute('src', _path + '/' + files_tr.getElementsByClassName('col1')[0].innerText)
-      musicPlayer.play()
+      console.log(this);
+      musicPlayer.setAttribute('src', _path + '/' + this.getElementsByClassName('col1')[0].innerText);
+      musicPlayer.play();
       createInterval();
     })
   }
 })
 function createInterval() {
   var musicDuration = window.setInterval(function () {
-    if (musicPlayer.duration) {
-      musicTimer.innerText = secToTimeFormat(musicPlayer.currentTime) + '/' + secToTimeFormat(musicPlayer.duration)
-      if(musicPlayer.ended){
+    if (musicPlayer.duration && !mouseDown) {
+      musicTimer.innerText = secToTimeFormat(musicPlayer.currentTime) + '/' + secToTimeFormat(musicPlayer.duration);
+      controller.style.left = (musicPlayer.currentTime / musicPlayer.duration) * slider.offsetWidth - controller.offsetWidth / 2 + 'px';
+      processor.style.width = (musicPlayer.currentTime / musicPlayer.duration) * slider.offsetWidth + 'px';
+      if (musicPlayer.ended) {
+        controller.style.left = -13 + 'px';
+        processor.style.width = 0 + 'px';
         resetMusicTimer();
-      window.clearInterval(musicDuration);
-        
+        window.clearInterval(musicDuration);
       }
     }
-  }, 1000);
+  }, 100);
 }
 
 function secToTimeFormat(time) {
@@ -67,7 +71,6 @@ function fileinfo(dir_str) {
 
 var mousePosition = document.querySelector('#mousePosition');
 mousePosition.style.position = 'absolute'
-console.log(mousePosition)
 var slider = document.querySelector('.slider');
 var buffer = document.querySelector('.buffer');
 var step = 0.05;
@@ -103,11 +106,6 @@ function dragDropHandler(event) {
     case 'mousedown':
       {
         mouseDown = true;
-        var offectX = (controller.parentElement.offsetWidth * 0.4 - controller.offsetWidth) / 2;
-        if (event.clientX - offectX <= slider.offsetWidth && event.clientX - offectX >= 0) {
-          controller.style.left = event.clientX - offectX + 'px';
-        }
-        // processor.style.left = tx + halfW * 3 + 'px'
         break;
       }
     case 'mousemove':
@@ -118,15 +116,18 @@ function dragDropHandler(event) {
         if (mouseDown) {
           var halfW = controller.offsetWidth >> 1;
           var offectX = controller.parentElement.offsetWidth * 0.2 - halfW + 88;
-          if (event.clientX - offectX <= slider.offsetWidth - halfW && event.clientX - offectX >= 0 - halfW) {
-            controller.style.left = event.clientX - offectX + 'px';
-            processor.style.width = event.clientX - offectX + halfW + 'px';
+          if (event.movementX + controller.offsetLeft <= slider.offsetWidth - halfW && event.movementX + controller.offsetLeft >= 0 - halfW) {
+            controller.style.left = event.movementX + controller.offsetLeft + 'px';
+            processor.style.width = event.movementX + processor.offsetWidth + 'px';
           }
         }
         break;
       }
     case 'mouseup':
       {
+        if (musicPlayer.getAttribute('src')) {
+          musicPlayer.currentTime = ((controller.offsetLeft + controller.offsetWidth / 2) / slider.offsetWidth) * musicPlayer.duration
+        }
         mouseDown = false;
         break;
       }
