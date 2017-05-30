@@ -1,12 +1,14 @@
 // const {shell} = require('electron')
-// console.log( )
-
-
+// console.log(shell)\
 
 var musicPlayer = document.querySelector('.musicPlayer');
-
-var url_button = document.getElementById('url_button');
-url_button.addEventListener('click', function () { console.log(musicPlayer.duration) });
+var dictorySelecter = document.querySelector('.dictorySelecter');
+dictorySelecter.addEventListener('change', function (evt) {
+  console.log(evt);
+  addMusicFiles(evt.target.files);
+  this.select();
+  window.parent.document.body.focus();
+}, false);
 
 function checkUrl(url) {
   var url1 = String(url);
@@ -17,29 +19,31 @@ function checkUrl(url) {
 }
 //本地文件写入
 var path = require('path');
-var _path = path.join(__dirname, '.', '/Musics');
 var fs = require('fs');
-
-fs.readdir(_path, function (err, files) {
-  console.log(files)
-  for (var i = 0; i < files.length; i++) {
+function addMusicFiles(floder) {
+  console.log(floder);
+  fs.readdir(floder[0].path, function (err, files) {
+    console.log(files, err)
     var fileList = document.querySelector('#fileListTable');
-    var files_tr = document.createElement('tr')
-    fileList.appendChild(files_tr)
-    files_tr.innerHTML = `
-                        <td class="col0"></td>
-                        <td class="col1">` + files[i] + `</td>
-                        <td class="col2">` + '123' + `</td>
-                        <td class="col3">` + fileinfo(_path + '/' + files[i]) + `</td>
-                        `
-    files_tr.addEventListener('dblclick', function () {
-      console.log(this);
-      musicPlayer.setAttribute('src', _path + '/' + this.getElementsByClassName('col1')[0].innerText);
-      musicPlayer.play();
-      createInterval();
-    })
-  }
-})
+    fileList.innerHTML = '';
+    for (var i = 0; i < files.length; i++) {
+      var files_tr = document.createElement('tr');
+      fileList.appendChild(files_tr);
+      files_tr.innerHTML = `
+                          <td class="col0"></td>
+                          <td class="col1">` + files[i] + `</td>
+                          <td class="col2">` + '123' + `</td>
+                          <td class="col3">` + fileinfo(floder[0].path + '/' + files[i]) + `</td>
+                          `;
+      files_tr.addEventListener('dblclick', function () {
+        console.log(this);
+        musicPlayer.setAttribute('src', floder[0].path + '/' + this.getElementsByClassName('col1')[0].innerText);
+        musicPlayer.play();
+        createInterval();
+      })
+    }
+  })
+}
 function createInterval() {
   var musicDuration = window.setInterval(function () {
     if (musicPlayer.duration && !mouseDown) {
@@ -89,6 +93,16 @@ var playButton = document.querySelector('.playButton');
 playButton.style.backgroundImage = ('./res/flatLight14.png');
 playButton.addEventListener('pointerup', function () {
   console.log(playButton);
+  if (musicPlayer.getAttribute('src')) {
+    if (musicPlayer.paused == false) {
+      musicPlayer.pause();
+      playButton.setAttribute('src','./res/flatLight12.png');
+
+    } else {
+      musicPlayer.play();
+      playButton.setAttribute('src','./res/flatLight14.png');
+    }
+  }
 })
 
 var volumeButton = document.querySelector('.volumeButton');
@@ -126,7 +140,7 @@ function dragDropHandler(event) {
     case 'mouseup':
       {
         if (musicPlayer.getAttribute('src')) {
-          musicPlayer.currentTime = ((controller.offsetLeft + controller.offsetWidth / 2) / slider.offsetWidth) * musicPlayer.duration
+          musicPlayer.currentTime = ((controller.offsetLeft + controller.offsetWidth / 2) / slider.offsetWidth) * musicPlayer.duration;
         }
         mouseDown = false;
         break;
