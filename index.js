@@ -1,5 +1,17 @@
 // const {shell} = require('electron')
 // console.log(shell)\
+var jsmediatags = require("jsmediatags");
+function printTag(filedir) {
+  jsmediatags.read(filedir, {
+    onSuccess: function(tag) {
+      console.log(tag);
+    },
+    onError: function(error) {
+      console.log(':(', error.type, error.info);
+    }
+  });
+}
+
 
 var musicPlayer = document.querySelector('.musicPlayer');
 var dictorySelecter = document.querySelector('.dictorySelecter');
@@ -46,7 +58,7 @@ function addMusicFiles(floder) {
 }
 function createInterval() {
   var musicDuration = window.setInterval(function () {
-    if (musicPlayer.duration && !mouseDown) {
+    if (musicPlayer.duration && !mouseDown && !musicPlayer.paused) {
       musicTimer.innerText = secToTimeFormat(musicPlayer.currentTime) + '/' + secToTimeFormat(musicPlayer.duration);
       controller.style.left = (musicPlayer.currentTime / musicPlayer.duration) * slider.offsetWidth - controller.offsetWidth / 2 + 'px';
       processor.style.width = (musicPlayer.currentTime / musicPlayer.duration) * slider.offsetWidth + 'px';
@@ -56,11 +68,13 @@ function createInterval() {
         resetMusicTimer();
         window.clearInterval(musicDuration);
       }
+
     }
   }, 100);
 }
 
 function secToTimeFormat(time) {
+  console.log(time);
   if (typeof (time) == 'number') {
     var sec = (time % 60).toFixed(0);
     var min = (time / 60).toFixed(0);
@@ -70,7 +84,8 @@ function secToTimeFormat(time) {
   }
 }
 function fileinfo(dir_str) {
-  return (fs.statSync(dir_str).size / 1024 / 1024).toFixed(2).toString() + "M"
+  printTag(dir_str);
+  return (fs.statSync(dir_str).size / 1024 / 1024).toFixed(2).toString() + "M";
 }
 
 var mousePosition = document.querySelector('#mousePosition');
@@ -96,11 +111,11 @@ playButton.addEventListener('pointerup', function () {
   if (musicPlayer.getAttribute('src')) {
     if (musicPlayer.paused == false) {
       musicPlayer.pause();
-      playButton.setAttribute('src','./res/flatLight12.png');
+      playButton.setAttribute('src', './res/flatLight12.png');
 
     } else {
       musicPlayer.play();
-      playButton.setAttribute('src','./res/flatLight14.png');
+      playButton.setAttribute('src', './res/flatLight14.png');
     }
   }
 })
