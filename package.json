@@ -2,8 +2,15 @@
   "name": "your-app",
   "version": "0.1.0",
   "main": "main.js",
-  "dependencies": {
-    "id3": "^0.0.3",
-    "jsmediatags": "^3.5.0"
+  "description": "lan music player",
+  "build": {
+    "appId": "qqyemingqq",
+    "mac": {
+      "category": "qqyemingqq"
+    },
+    "scripts": {
+      "pack": "build --dir",
+      "dist": "build"
+    }
   }
 }
