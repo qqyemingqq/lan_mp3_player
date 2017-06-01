@@ -3,10 +3,10 @@
 var jsmediatags = require("jsmediatags");
 function printTag(filedir) {
   jsmediatags.read(filedir, {
-    onSuccess: function(tag) {
+    onSuccess: function (tag) {
       console.log(tag);
     },
-    onError: function(error) {
+    onError: function (error) {
       console.log(':(', error.type, error.info);
     }
   });
@@ -84,7 +84,7 @@ function secToTimeFormat(time) {
   }
 }
 function fileinfo(dir_str) {
-  printTag(dir_str);
+  // printTag(dir_str);
   return (fs.statSync(dir_str).size / 1024 / 1024).toFixed(2).toString() + "M";
 }
 
@@ -154,7 +154,7 @@ function dragDropHandler(event) {
       }
     case 'mouseup':
       {
-        if (musicPlayer.getAttribute('src')) {
+        if (musicPlayer.getAttribute('src') && mouseDown) {
           musicPlayer.currentTime = ((controller.offsetLeft + controller.offsetWidth / 2) / slider.offsetWidth) * musicPlayer.duration;
         }
         mouseDown = false;
