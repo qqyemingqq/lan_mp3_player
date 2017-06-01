@@ -1,17 +1,5 @@
 // const {shell} = require('electron')
-// console.log(shell)\
-var jsmediatags = require("jsmediatags");
-function printTag(filedir) {
-  jsmediatags.read(filedir, {
-    onSuccess: function (tag) {
-      console.log(tag);
-    },
-    onError: function (error) {
-      console.log(':(', error.type, error.info);
-    }
-  });
-}
-
+// console.log(shell)
 
 var musicPlayer = document.querySelector('.musicPlayer');
 var dictorySelecter = document.querySelector('.dictorySelecter');
@@ -84,7 +72,6 @@ function secToTimeFormat(time) {
   }
 }
 function fileinfo(dir_str) {
-  // printTag(dir_str);
   return (fs.statSync(dir_str).size / 1024 / 1024).toFixed(2).toString() + "M";
 }
 
