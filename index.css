@@ -4,26 +4,33 @@ html,body{
 -khtml-user-select: none;
 user-select: none;
 cursor: default;
+/*background-color: #01f0F0;*/
+overflow: hidden;
+-webkit-app-region: drag;
 }
 .fileArea{
     height: 200px;
     width: 544px;
     border-style: solid;
     overflow: hidden;
+-webkit-app-region: no-drag;
 }
 .fileBody{
     height: 178px;
     overflow-y: scroll;
+-webkit-app-region: no-drag;
 }
 table{
     width: 100%;
     word-break:break-all;
     text-overflow: ellipsis;
+-webkit-app-region: no-drag;
 }
 tr{
     height: 20px;
     overflow: auto;
     transition: all .2s ease;
+-webkit-app-region: no-drag;
 }
 tr:hover {
     background-color: #01f0F0;
@@ -33,6 +40,7 @@ tr:hover {
 td{
     height: 20px;
     padding: 0px;
+-webkit-app-region: no-drag;
 }
 th,td{text-overflow : clip}
 th.col0,td.col0{max-width:20px;min-width:20px; width: 20px}
@@ -48,12 +56,14 @@ th.col3,td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
     border-bottom: 1px solid #4a4a4a;
     position: fixed;
     /*bottom: 50%;*/
+-webkit-app-region: no-drag;
 }
 .playButton,.volumeButton{
   position: relative;
   /*left:50%;*/
   top: -5px;
   /*background-image: url('./res/flatLight14.png');*/
+-webkit-app-region: no-drag;
 }
 .musicTimer{
   color: #fff;
@@ -77,6 +87,7 @@ th.col3,td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
     margin-left: 10px;
     top: -3px;
     position: relative;
+-webkit-app-region: no-drag;
 }
 .slider>.buffer{
     width: 60%;
