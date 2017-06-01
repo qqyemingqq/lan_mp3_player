@@ -26,15 +26,27 @@ function addMusicFiles(floder) {
     console.log(files, err)
     var fileList = document.querySelector('#fileListTable');
     fileList.innerHTML = '';
+    var musicEleArry = new Array();
+    var durEleArry = new Array();
     for (var i = 0; i < files.length; i++) {
       var files_tr = document.createElement('tr');
+
       fileList.appendChild(files_tr);
       files_tr.innerHTML = `
                           <td class="col0"></td>
                           <td class="col1">` + files[i] + `</td>
-                          <td class="col2">` + '123' + `</td>
+                          <td class="col2">` + '???' + `</td>
                           <td class="col3">` + fileinfo(floder[0].path + '/' + files[i]) + `</td>
                           `;
+      
+      var tempAudioElement = document.createElement('audio');
+      tempAudioElement.setAttribute('src', floder[0].path + '/' + files[i]);
+      tempAudioElement.play();
+      tempAudioElement.volume = 0;
+      document.body.appendChild(tempAudioElement);
+      musicEleArry.push(tempAudioElement);
+      durEleArry.push(files_tr.getElementsByClassName('col2')[0]);
+      
       files_tr.addEventListener('dblclick', function () {
         console.log(this);
         musicPlayer.setAttribute('src', floder[0].path + '/' + this.getElementsByClassName('col1')[0].innerText);
@@ -42,7 +54,29 @@ function addMusicFiles(floder) {
         createInterval();
       })
     }
+    
+      setTimeout(function () {
+        for(index in musicEleArry){
+        console.log(musicEleArry[index],durEleArry[index])
+        durEleArry[index].innerText = secToTimeFormat(musicEleArry[index].duration);
+        musicEleArry[index].parentElement.removeChild(musicEleArry[index]);
+        }
+      }, 1000);
   })
+}
+function getMusicLenth(dir_str) {
+  var dur = 0;
+  var tempAudioElement = document.createElement('audio');
+  tempAudioElement.setAttribute('src', dir_str);
+  document.body.appendChild(tempAudioElement);
+  tempAudioElement.volume = 0;
+  setTimeout(function () {
+    console.log(tempAudioElement);
+    dur = tempAudioElement.duration;
+    tempAudioElement = undefined;
+    console.log(dur);
+    return dur;
+  }, 1000);
 }
 function createInterval() {
   var musicDuration = window.setInterval(function () {
@@ -62,7 +96,7 @@ function createInterval() {
 }
 
 function secToTimeFormat(time) {
-  console.log(time);
+  // console.log(time);
   if (typeof (time) == 'number') {
     var sec = (time % 60).toFixed(0);
     var min = (time / 60).toFixed(0);
