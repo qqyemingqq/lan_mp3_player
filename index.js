@@ -61,7 +61,7 @@ function addMusicFiles(floder) {
         durEleArry[index].innerText = secToTimeFormat(musicEleArry[index].duration);
         musicEleArry[index].parentElement.removeChild(musicEleArry[index]);
         }
-      }, 1000);
+      }, 2000);
   })
 }
 function getMusicLenth(dir_str) {
@@ -76,7 +76,7 @@ function getMusicLenth(dir_str) {
     tempAudioElement = undefined;
     console.log(dur);
     return dur;
-  }, 1000);
+  }, 3000);
 }
 function createInterval() {
   var musicDuration = window.setInterval(function () {
