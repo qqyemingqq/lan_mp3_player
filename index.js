@@ -63,20 +63,30 @@ function musicPlayAndPauseChangeHandler() {
 }
 /**
  * 选择文件夹后的处理操作
- * @param {Event} evt 
+ * @param {Event} event 
  */
-function folderSelectedHandler(evt) {
-  addMusicFiles(evt.target.files);
+function folderSelectedHandler(event) {
+  addMusicFiles(event.target.files);
   this.select();
   window.parent.document.body.focus();
+}
+function chekMusicFile(fileName) {
+  musicFileType = ['mp3','flac','wav','wma'];
 }
 /**
  * 根据文件列表创建音乐文件列表并添加鼠标双击事件
  * @param {FileList} floder 
  */
 function addMusicFiles(floder) {
-  fs.readdir(floder[0].path, function (err, files) {
+  fs.readdir(floder[0].path, function (err, fsFiles) {
     fileList.innerHTML = '';
+        var files = [];
+    for(i in fsFiles){
+      if(fs.statSync(floder[0].path + '/' + fsFiles[i]).isFile() && fsFiles[i]){
+        files.push(fsFiles[i]);
+      }
+    }
+    console.log(files);
     for (var i = 0; i < files.length; i++) {
       var files_tr = document.createElement('tr');
 
