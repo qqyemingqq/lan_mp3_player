@@ -14,7 +14,7 @@ function createWindow () {
     height: 908,
     transparent: true,
     frame: false,
-    backgroundColor: '#0066CC',
+    backgroundColor: '#749ed3',
     resizable:false,
     // thickFrame:false
   });//,transparent: true,frame: false

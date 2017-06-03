@@ -5,7 +5,7 @@ var durEleArry = new Array();       //存放每个音乐列表的时间DOM，用
 var musicSrcArry = new Array();     //存放所有音乐地址的信息，随机播放用
 var musicEleArry = new Array();     //用于存放临AudioElement，用作加载音乐读取时间
 var mouseDown = false;              //存放当前鼠标按下状态
-
+var fr = new FileReader();
 var dictorySelecter = document.querySelector('.dictorySelecter');//选择音乐路径控件
 var fileList = document.querySelector('#fileListTable');//获取音乐播放器列表容器
 var musicPlayer = document.querySelector('.musicPlayer');//播放器主体
@@ -70,8 +70,19 @@ function folderSelectedHandler(event) {
   this.select();
   window.parent.document.body.focus();
 }
+/**
+ * 检查支持的文件类型，不支持的过滤不显示
+ * @param {string} fileName 
+ */
 function chekMusicFile(fileName) {
-  musicFileType = ['mp3','flac','wav','wma'];
+  acess = false;
+  musicFileType = ['mp3', 'flac', 'wav', 'wma'];
+  musicFileType.forEach(function (element) {
+    if (fileName.indexOf(element) > 0) {
+      acess = true;
+    }
+  }, this);
+  return acess;
 }
 /**
  * 根据文件列表创建音乐文件列表并添加鼠标双击事件
@@ -80,13 +91,12 @@ function chekMusicFile(fileName) {
 function addMusicFiles(floder) {
   fs.readdir(floder[0].path, function (err, fsFiles) {
     fileList.innerHTML = '';
-        var files = [];
-    for(i in fsFiles){
-      if(fs.statSync(floder[0].path + '/' + fsFiles[i]).isFile() && fsFiles[i]){
+    var files = [];
+    for (i in fsFiles) {
+      if (fs.statSync(floder[0].path + '/' + fsFiles[i]).isFile() && chekMusicFile(fsFiles[i])) {
         files.push(fsFiles[i]);
       }
     }
-    console.log(files);
     for (var i = 0; i < files.length; i++) {
       var files_tr = document.createElement('tr');
 
@@ -97,6 +107,13 @@ function addMusicFiles(floder) {
                           <td class="col2">` + '???' + `</td>
                           <td class="col3">` + fileinfo(floder[0].path + '/' + files[i]) + `</td>
                           `;
+      var time_ = 0;
+      if (time_ == 0) {
+        audioCtx.decodeAudioData(fr.readAsArrayBuffer(new Blob([files[i]], { type: "audio/*" })), function (decodedData) {
+          console.log(decodedData);
+        });
+        time_ = 1;
+      }
       musicSrcArry.push(floder[0].path + '/' + files[i]);
       var tempAudioElement = document.createElement('audio');
       tempAudioElement.setAttribute('src', floder[0].path + '/' + files[i]);
@@ -106,7 +123,8 @@ function addMusicFiles(floder) {
       musicEleArry.push(tempAudioElement);
       durEleArry.push(files_tr.getElementsByClassName('col2')[0]);
       files_tr.addEventListener('dblclick', function () {
-        musicPlayer.setAttribute('src', floder[0].path + '/' + this.getElementsByClassName('col1')[0].innerText);
+        var _src = floder[0].path + '/' + this.getElementsByClassName('col1')[0].innerText;
+        musicPlayer.setAttribute('src', _src);
         musicPlayer.play();
         createInterval();
       })
@@ -217,3 +235,6 @@ function dragDropHandler(event) {
 function getControllerOffsetPersentPosition() {
   return (controller.offsetLeft + controller.offsetWidth / 2) / slider.offsetWidth;
 }
+
+var AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioCtx = new AudioContext();
