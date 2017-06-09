@@ -7,12 +7,13 @@ var musicEleArry = new Array();     //用于存放临AudioElement，用作加载
 var mouseDown = false;              //存放当前鼠标按下状态
 var fr = new FileReader();
 var dictorySelecter = document.querySelector('.dictorySelecter');//选择音乐路径控件
+var windowTitle = document.querySelector('.windowTitle');//获取窗体名称，控制任务栏显示的歌曲名字
 var fileList = document.querySelector('#fileListTable');//获取音乐播放器列表容器
 var musicPlayer = document.querySelector('.musicPlayer');//播放器主体
 var processor = document.querySelector('.processor');//红色进度条
 var slider = document.querySelector('.slider');//播放器的滑块控制系统
 var volumeButton = document.querySelector('.volumeButton');//声音控制按钮
-var mousePosition = document.querySelector('#mousePosition');//跟随鼠标文本
+// var mousePosition = document.querySelector('#mousePosition');//跟随鼠标文本
 var buffer = document.querySelector('.buffer');//缓冲器，暂无用途
 var controller = document.querySelector('.controller');//播放器滑块控制器
 var playButton = document.querySelector('.playButton');//播放器播放按钮
@@ -35,6 +36,7 @@ function setPlayButtonToPlayHandler() {
 }
 /**
  * 设置播放器按钮到暂停状态
+ * 设置窗体名称
  */
 function setPlayButtonToPauseHandler() {
   playButton.setAttribute('src', './res/flatLight12.png');
@@ -109,9 +111,9 @@ function addMusicFiles(floder) {
                           `;
       var time_ = 0;
       if (time_ == 0) {
-        audioCtx.decodeAudioData(fr.readAsArrayBuffer(new Blob([files[i]], { type: "audio/*" })), function (decodedData) {
-          console.log(decodedData);
-        });
+        // audioCtx.decodeAudioData(fr.readAsArrayBuffer(new Blob([files[i]], { type: "audio/*" })), function (decodedData) {
+        //   console.log(decodedData);
+        // });
         time_ = 1;
       }
       musicSrcArry.push(floder[0].path + '/' + files[i]);
@@ -126,6 +128,7 @@ function addMusicFiles(floder) {
         var _src = floder[0].path + '/' + this.getElementsByClassName('col1')[0].innerText;
         musicPlayer.setAttribute('src', _src);
         musicPlayer.play();
+        windowTitle.innerText = this.getElementsByClassName('col1')[0].innerText;
         createInterval();
       })
     }
@@ -205,9 +208,9 @@ function dragDropHandler(event) {
       }
     case 'mousemove':
       {
-        mousePosition.style.top = event.clientY + 15 + 'px';
-        mousePosition.style.left = event.clientX + 5 + 'px';
-        mousePosition.innerText = '(' + event.clientX + ',' + event.clientY + ')';
+        // mousePosition.style.top = event.clientY + 15 + 'px';
+        // mousePosition.style.left = event.clientX + 5 + 'px';
+        // mousePosition.innerText = '(' + event.clientX + ',' + event.clientY + ')';
         if (mouseDown) {
           var halfW = controller.offsetWidth >> 1;
           var offectX = controller.parentElement.offsetWidth * 0.2 - halfW + 88;

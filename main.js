@@ -10,8 +10,8 @@ function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
     width: 570,
-    // height: 288,
-    height: 908,
+    height: 288,
+    // height: 908,
     transparent: true,
     frame: false,
     backgroundColor: '#749ed3',
@@ -27,7 +27,7 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 
   // Emitted when the window is closed.
   win.on('closed', () => {
