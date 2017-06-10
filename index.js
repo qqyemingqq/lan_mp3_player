@@ -177,16 +177,16 @@ function fileinfo(dir_str) {
   return (fs.statSync(dir_str).size / 1024 / 1024).toFixed(2).toString() + "M";
 }
 
-var step = 0.05;
-var timer = window.setInterval(function () {
-  var sw = slider.offsetWidth;
-  var w = buffer.offsetWidth;
-  buffer.style.width = w + sw * step + 'px';
-  if (w + sw * step >= sw) {
-    buffer.style.width = sw + 'px';
-    window.clearInterval(timer);
-  }
-}, 100);
+// var step = 0.05;
+// var timer = window.setInterval(function () {
+//   var sw = slider.offsetWidth;
+//   var w = buffer.offsetWidth;
+//   buffer.style.width = w + sw * step + 'px';
+//   if (w + sw * step >= sw) {
+//     buffer.style.width = sw + 'px';
+//     window.clearInterval(timer);
+//   }
+// }, 100);
 
 /**
  * 初始化计时器显示

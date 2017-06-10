@@ -2,13 +2,14 @@
 <html>
 
 <head>
-  <script type="text/javascript" src="/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
   <meta charset="UTF-8">
   <title class="windowTitle">局域网音乐播放器</title>
   <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
+  <div class="musicHeadDiv" ></div>
   <label id="mousePosition" style="position:absolute"></label>
   <text>请选择音乐地址：</text>
   <!--<input id="url_input" type="text" name="input_name" value="\\10.10.20.42\share"></input>-->
@@ -31,21 +32,24 @@
       </table>
     </div>
   </div>
-  <div class="player">
+  
+
+  <!--<audio controls>
+    <source id="audio_source" src="" type="audio/mpeg">
+  </audio>-->
+  <div class="bottomController" >
+    <div class="player">
     <image class="playButton" src="./res/flatLight14.png"></image>
     <image class="volumeButton" src="./res/flatLight11.png"></image>
     <div class="slider">
-      <div class="buffer"></div>
+      <!--<div class="buffer"></div>-->
       <div class="processor"></div>
       <div class="controller"></div>
     </div>
     <text class="musicTimer">00:00/00:00</text>
     <audio class="musicPlayer"> </audio>
   </div>
-
-  <!--<audio controls>
-    <source id="audio_source" src="" type="audio/mpeg">
-  </audio>-->
+  </div>
   <script src="index.js" type="text/javascript"></script>
 </body>
 
