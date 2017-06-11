@@ -6,11 +6,11 @@ user-select: none;
 cursor: default;
 /*background-color: #01f0F0;*/
 overflow: hidden;
--webkit-app-region: drag;
+
 margin: 0px;
 }
 .dictorySelecter{
--webkit-app-region: no-drag;    
+   
 }
 
 .musicHeadDiv{
@@ -19,7 +19,9 @@ margin: 0px;
     height: 50px;
     /*position: fixed;*/
     top: 0px;
+    -webkit-app-region: drag;
 }
+    
 .bottomController{
     border-top:1px double #e1e1e2;
     background: #f6f6f8;
@@ -33,24 +35,20 @@ margin: 0px;
     width: 544px;
     border-style: solid;
     overflow: hidden;
--webkit-app-region: no-drag;
 }
 .fileBody{
     height: 178px;
     overflow-y: scroll;
--webkit-app-region: no-drag;
 }
 table{
     width: 100%;
     word-break:break-all;
     text-overflow: ellipsis;
--webkit-app-region: no-drag;
 }
 tr{
     height: 20px;
     overflow: auto;
     transition: all .2s ease;
--webkit-app-region: no-drag;
 }
 tr:hover {
     background-color: #01f0F0;
@@ -60,7 +58,6 @@ tr:hover {
 td{
     height: 20px;
     padding: 0px;
--webkit-app-region: no-drag;
 }
 th,td{text-overflow : clip}
 th.col0,td.col0{max-width:20px;min-width:20px; width: 20px}
@@ -69,70 +66,115 @@ th.col3{min-width: 96px; max-width:96px;width: 96px}
 td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
 
 .player{
-    /*margin-top: 200px;*/
+    display: inline-block;
     width: 100%;
-    height: 100%;
-    background-color: #2d2d2d;
+    height: 48px;
+    /*background-color: #2d2d2d;
     border-top: 1px solid #4a4a4a;
-    border-bottom: 1px solid #4a4a4a;
-    position: fixed;
-    /*bottom: 50%;*/
--webkit-app-region: no-drag;
+    border-bottom: 1px solid #4a4a4a;*/
+    }
+.playerControllers{
+    width: 150px;
+    height: 45px;
+    /*border: 1px solid black;*/
+    /*text-align: center;*/
+    position: relative;
+    display: inline-block;
 }
-.playButton,.volumeButton{
-  position: relative;
-  /*left:50%;*/
-  top: -5px;
-  /*background-image: url('./res/flatLight14.png');*/
--webkit-app-region: no-drag;
+.playButton,.nextButton,.previousButton{
+    position: relative;
+    /*margin-left: 0 auto;*/
+    vertical-align: middle;
+    padding: 6px;
 }
 .musicTimer{
-  color: #fff;
-  text-shadow: 1px 1px 3px #4a4a4a;
-  top: -24px;
-  position: relative;
-  left: 7px;
+    color: #fff;
+    text-shadow: 1px 1px 3px #4a4a4a;
+    top: -24px;
+    position: relative;
+    left: 7px;
 }
 .slider{
     display:inline-block;
-    width: 60%;
-    height: 90px;
-    background-color: #181818;
-    border-top: 500px;
-    height: 10px;
-    background-color: #181818;
-    border-top: 1px solid #0b0b0b;
-    border-bottom: 1px solid #4a4a4a;
+    width: 400px;
+    height: 4px;
+    /*border-top: 500px;*/
+    background-color: #e6e6e8;
     border-radius: 6px;
-    margin: 20px auto;
+    margin: 0 auto;
     margin-left: 10px;
     top: -3px;
     position: relative;
--webkit-app-region: no-drag;
-}
-/*.slider>.buffer{
-    width: 60%;
-    height: 100%;
-    background-color: #535353;
-    border-radius: 6px;
-    position: absolute;
-}*/
+    }
 .slider>.processor{
-    width: 8px;
+    width: 4px;
     height: 100%;
-    background-color: #c70c0c;
+    background-color: #e83c3c;
     border-radius: 6px;
     position: absolute;
 }
 .slider>.controller{
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border: 10px solid #f3f3f6;
-    background-color: rgba(255,255,255,0);
+    position: relative;
+    width: 4px;
+    height: 4px;
+    /*border: 6px solid #c6c6c6;*/
+    border: 4px solid #fff;
+    background-color: #e83c3c;
     border-radius:50%;
-    -webkit-border-radius:50%;
-    -moz-border-radius:50%;
-    top: -8px;
-    left:-13px;
+    top: -4px;
+    left:-6px;
+}
+.slider>.controller>.controllerBorder{
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: rgba(0,0,0,0);
+    border: 1px solid #c6c6c6;
+    border-radius:50%;
+    top: -5px;
+    left:-5px;
+}
+.currentTime,.durationTime{
+    padding: 5px;
+}
+
+.volume{
+    display:inline-block;
+    width: 50px;
+    height: 4px;
+    /*border-top: 500px;*/
+    background-color: #e6e6e8;
+    border-radius: 6px;
+    margin: 0 auto;
+    margin-left: 10px;
+    top: -3px;
+    position: relative;
+    }
+.volume>.volumeProcessor{
+    width: 4px;
+    height: 100%;
+    background-color: #e83c3c;
+    border-radius: 6px;
+    position: absolute;
+}
+.volume>.volumeController{
+    position: relative;
+    width: 4px;
+    height: 4px;
+    /*border: 6px solid #c6c6c6;*/
+    border: 4px solid #fff;
+    background-color: #e83c3c;
+    border-radius:50%;
+    top: -4px;
+    left:-6px;
+}
+.volume>.volumeController>.volumeControllerBorder{
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: rgba(0,0,0,0);
+    border: 1px solid #c6c6c6;
+    border-radius:50%;
+    top: -5px;
+    left:-5px;
 }

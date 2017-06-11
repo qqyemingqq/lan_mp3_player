@@ -32,24 +32,33 @@
       </table>
     </div>
   </div>
-  
 
-  <!--<audio controls>
-    <source id="audio_source" src="" type="audio/mpeg">
-  </audio>-->
   <div class="bottomController" >
     <div class="player">
-    <image class="playButton" src="./res/flatLight14.png"></image>
-    <image class="volumeButton" src="./res/flatLight11.png"></image>
+      <div class="playerControllers">
+        <image class="previousButton" src="./res/previous.png"></image>
+        <image class="playButton" src="./res/play.png"></image>
+        <image class="nextButton" src="./res/next.png"></image>
+      </div>
+    <text class="currentTime">00:00</text>
     <div class="slider">
-      <!--<div class="buffer"></div>-->
       <div class="processor"></div>
-      <div class="controller"></div>
+      <div class="controller"><div class="controllerBorder"></div></div>
     </div>
-    <text class="musicTimer">00:00/00:00</text>
+    <text class="durationTime">00:00</text>
+    <image class="playButton" src="./res/volume.png"></image>
+
+    <div class="volume">
+    <div class="volumeSlider">
+      <div class="volumeProcessor"></div>
+      <div class="volumeController"><div class="volumeControllerBorder"></div></div>
+    </div>
+  </div>
+    
+    <!--<text class="musicTimer">00:00/00:00</text>-->
+  </div>
+  </div>
     <audio class="musicPlayer"> </audio>
-  </div>
-  </div>
   <script src="index.js" type="text/javascript"></script>
 </body>
 

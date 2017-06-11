@@ -32,14 +32,14 @@ window.addEventListener('mouseup', dragDropHandler);
  * 设置播放按钮到播放状态
  */
 function setPlayButtonToPlayHandler() {
-  playButton.setAttribute('src', './res/flatLight14.png');
+  playButton.setAttribute('src', './res/play.png');
 }
 /**
  * 设置播放器按钮到暂停状态
  * 设置窗体名称
  */
 function setPlayButtonToPauseHandler() {
-  playButton.setAttribute('src', './res/flatLight12.png');
+  playButton.setAttribute('src', './res/pause.png');
 }
 /**
  * 重置播放器状态并继续随机播放下一首
@@ -213,7 +213,7 @@ function dragDropHandler(event) {
         // mousePosition.innerText = '(' + event.clientX + ',' + event.clientY + ')';
         if (mouseDown) {
           var halfW = controller.offsetWidth >> 1;
-          var offectX = controller.parentElement.offsetWidth * 0.2 - halfW + 88;
+          // var offectX = controller.parentElement.offsetWidth * 0.2 - halfW + 88;
           if (event.movementX + controller.offsetLeft <= slider.offsetWidth - halfW && event.movementX + controller.offsetLeft >= 0 - halfW) {
             controller.style.left = event.movementX + controller.offsetLeft + 'px';
             processor.style.width = event.movementX + processor.offsetWidth + 'px';
