@@ -9,12 +9,13 @@
 </head>
 
 <body>
-  <div class="musicHeadDiv" ></div>
+  <div class="musicHeadDiv"></div>
   <label id="mousePosition" style="position:absolute"></label>
-  <text>请选择音乐地址：</text>
-  <!--<input id="url_input" type="text" name="input_name" value="\\10.10.20.42\share"></input>-->
-  <input type='file' accept="audio/*" value='选择文件夹' class="dictorySelecter" onclick='' webkitdirectory/>
-  <!--<button id="url_button" type="submit" value="连接">连接</button>-->
+  <div class="menu">
+  </div>
+  <div class="neirong">
+    <text>请选择音乐地址：</text>
+    <input type='file' accept="audio/*" value='选择文件夹' class="dictorySelecter" onclick='' webkitdirectory/>
   <div class="fileArea">
     <div class="fileHead">
       <table>
@@ -32,29 +33,32 @@
       </table>
     </div>
   </div>
+  </div>
 
-  <div class="bottomController" >
+  <div class="bottomController">
     <div class="player">
       <div class="playerControllers">
         <image class="previousButton" src="./res/previous.png"></image>
         <image class="playButton" src="./res/play.png"></image>
         <image class="nextButton" src="./res/next.png"></image>
       </div>
-    <div class="slider">
-      <div class="processor"></div>
-      <div class="controller"><div class="controllerBorder"></div></div>
-    </div>
-    <text class="musicTimer">00:00/00:55</text>
-    <image class="playButton" src="./res/volume.png"></image>
+      <div class="slider">
+        <div class="processor"></div>
+        <div class="controller">
+          <div class="controllerBorder"></div>
+        </div>
+      </div>
+      <text class="musicTimer">00:00/00:55</text>
+      <image class="playButton" src="./res/volume.png"></image>
 
-    <div class="volumeSlider">
-      <div class="volumeProcessor"></div>
-      <div class="volumeController"></div>
+      <div class="volumeSlider">
+        <div class="volumeProcessor"></div>
+        <div class="volumeController"></div>
+      </div>
+
+    </div>
   </div>
-    
-  </div>
-  </div>
-    <audio class="musicPlayer"> </audio>
+  <audio class="musicPlayer"> </audio>
   <script src="index.js" type="text/javascript"></script>
 </body>
 

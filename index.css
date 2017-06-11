@@ -10,7 +10,7 @@ overflow: hidden;
 margin: 0px;
 }
 .dictorySelecter{
-   
+
 }
 
 .musicHeadDiv{
@@ -31,14 +31,30 @@ margin: 0px;
     bottom: 0px;
 }
 .fileArea{
-    height: 200px;
-    width: 544px;
-    border-style: solid;
+    height: 100%;
+    width: 100%;
+    /*border:1px solid #000;*/
     overflow: hidden;
+    display: inline-block;
+}
+.menu{
+    border:1px solid #000;
+    height: 572px;
+    width: 130px;
+    display: inline-block;
+    position: relative;
+}
+.neirong{
+    border:1px solid #000;
+    height: 572px;
+    width: 646px;
+    display: inline-block;
+    margin: 0 auto;
+    position: fixed;
 }
 .fileBody{
-    height: 178px;
-    overflow-y: scroll;
+    /*height: 574px;*/
+    /*overflow: scroll;*/
 }
 table{
     width: 100%;
@@ -69,38 +85,28 @@ td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
     display: inline-block;
     width: 100%;
     height: 48px;
-    /*background-color: #2d2d2d;
-    border-top: 1px solid #4a4a4a;
-    border-bottom: 1px solid #4a4a4a;*/
     }
 .playerControllers{
     width: 150px;
     height: 45px;
-    /*border: 1px solid black;*/
-    /*text-align: center;*/
     position: relative;
     display: inline-block;
 }
 .playButton,.nextButton,.previousButton{
     position: relative;
-    /*margin-left: 0 auto;*/
     vertical-align: middle;
     padding: 6px;
 }
 .musicTimer{
     color: #a5acb1;
-    /*text-shadow: 1px 1px 3px #4a4a4a;*/
-    /*top: -24px;*/
     font-size: 14px;
     font-family: sans-serif;
     position: relative;
-    /*left: 7px;*/
 }
 .slider{
     display:inline-block;
     width: 400px;
     height: 4px;
-    /*border-top: 500px;*/
     background-color: #e6e6e8;
     border-radius: 6px;
     margin: 0 auto;
@@ -119,7 +125,6 @@ td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
     position: relative;
     width: 4px;
     height: 4px;
-    /*border: 6px solid #c6c6c6;*/
     border: 4px solid #fff;
     background-color: #e83c3c;
     border-radius:50%;
@@ -144,11 +149,9 @@ td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
     display:inline-block;
     width: 50px;
     height: 4px;
-    /*border-top: 500px;*/
     background-color: #e6e6e8;
     border-radius: 6px;
     margin: 0 auto;
-    /*margin-left: 10px;*/
     top: -3px;
     position: relative;
     }
