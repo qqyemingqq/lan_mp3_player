@@ -1,19 +1,14 @@
 var path = require('path');//导入node的path库
 var fs = require('fs');//导入node的fs库
-var musicObj = {
-  name:'',
-  path:'',
-  duration:0,
-  sort:0,
-}
+
 var musicIndex = 0;
 var musicInfomation = require("./musicInfo.js");
-var musicList =[];
+var musicList = [];
 var durEleArry = new Array();       //存放每个音乐列表的时间DOM，用作异步读取时间并写入时间
 var musicSrcArry = new Array();     //存放所有音乐地址的信息，随机播放用
 var musicEleArry = new Array();     //用于存放临AudioElement，用作加载音乐读取时间
 var mouseDown = false;              //存放当前鼠标按下状态
-var volumeMouseDown =false;
+var volumeMouseDown = false;
 var fr = new FileReader();
 var dictorySelecter = document.querySelector('.dictorySelecter');//选择音乐路径控件
 var windowTitle = document.querySelector('.windowTitle');//获取窗体名称，控制任务栏显示的歌曲名字
@@ -25,7 +20,11 @@ var volumeButton = document.querySelector('.volumeButton');//声音控制按钮
 // var mousePosition = document.querySelector('#mousePosition');//跟随鼠标文本
 var buffer = document.querySelector('.buffer');//缓冲器，暂无用途
 var controller = document.querySelector('.controller');//播放器滑块控制器
+
+var previousButton = document.querySelector('.previousButton');//播放器上一首按钮
 var playButton = document.querySelector('.playButton');//播放器播放按钮
+var nextButton = document.querySelector('.nextButton');//播放器下一首按钮
+
 var musicTimer = document.querySelector('.musicTimer');//播放器当前时间显示
 
 var volumeProcessor = document.querySelector('.volumeProcessor');//音量进度条
@@ -37,12 +36,38 @@ musicPlayer.addEventListener('pause', setPlayButtonToPlayHandler);
 musicPlayer.addEventListener('play', setPlayButtonToPauseHandler);
 musicPlayer.addEventListener('ended', resetPlayerAndRandomPlayNextMusicHandler);
 playButton.addEventListener('pointerup', musicPlayAndPauseChangeHandler);
+nextButton.addEventListener('pointerup', setNextMusicHandler);
+previousButton.addEventListener('pointerup', setPreviousMusicHandler);
 controller.addEventListener('mousedown', dragDropHandler);
-volumeController.addEventListener('mousedown',volumeDragDropHandler);
+volumeController.addEventListener('mousedown', volumeDragDropHandler);
 window.addEventListener('mousemove', dragDropHandler);
 window.addEventListener('mousemove', volumeDragDropHandler);
 window.addEventListener('mouseup', dragDropHandler);
 window.addEventListener('mouseup', volumeDragDropHandler);
+
+/**
+ * 播放上一首
+ */
+function setPreviousMusicHandler() {
+  var m = getMusicObjByMusicUrl(musicPlayer.getAttribute('src'));
+  if (m.sort == 0) {
+    playMusicByMusicUrl(getMusicObjBySort(musicList.length - 1).path);
+  } else {
+    playMusicByMusicUrl(getMusicObjBySort(m.sort - 1).path);
+  }
+}
+
+/**
+ * 播放下一首
+ */
+function setNextMusicHandler() {
+  var m = getMusicObjByMusicUrl(musicPlayer.getAttribute('src'));
+  if (m.sort == musicList.length - 1) {
+    playMusicByMusicUrl(getMusicObjBySort(0).path);
+  } else {
+    playMusicByMusicUrl(getMusicObjBySort(m.sort + 1).path);
+  }
+}
 
 /**
  * 设置播放按钮到播放状态
@@ -64,8 +89,7 @@ function resetPlayerAndRandomPlayNextMusicHandler() {
   controller.style.left = -13 + 'px';
   processor.style.width = 0 + 'px';
   resetMusicTimer();
-  musicPlayer.setAttribute('src', musicList[parseInt(Math.random() * musicSrcArry.length, 10)]);
-  musicPlayer.play();
+  playMusicByMusicUrl(musicList[parseInt(Math.random() * musicSrcArry.length, 10)].path);
 }
 /**
  * 播放器暂停和播放按钮控制切换
@@ -107,6 +131,7 @@ function chekMusicFile(fileName) {
  * @param {FileList} floder 
  */
 function addMusicFiles(floder) {
+  musicList = [];
   fs.readdir(floder[0].path, function (err, fsFiles) {
     fileList.innerHTML = '';
     var files = [];
@@ -140,7 +165,6 @@ function addMusicFiles(floder) {
       minfo.durationElement = files_tr.getElementsByClassName('col2')[0];
       musicIndex++;
       musicList.push(minfo);
-      console.log(musicList);
       musicSrcArry.push(floder[0].path + '/' + files[i]);
       var tempAudioElement = document.createElement('audio');
       tempAudioElement.setAttribute('src', floder[0].path + '/' + files[i]);
@@ -151,9 +175,7 @@ function addMusicFiles(floder) {
       durEleArry.push(files_tr.getElementsByClassName('col2')[0]);
       files_tr.addEventListener('dblclick', function () {
         var _src = floder[0].path + '/' + this.getElementsByClassName('col1')[0].innerText;
-        musicPlayer.setAttribute('src', _src);
-        musicPlayer.play();
-        windowTitle.innerText = this.getElementsByClassName('col1')[0].innerText;
+        playMusicByMusicUrl(_src);
         createInterval();
       })
     }
@@ -242,29 +264,29 @@ function dragDropHandler(event) {
   }
 }
 function volumeDragDropHandler(event) {
-    switch (event.type) {
-        case 'mousedown':
-            {
-                volumeMouseDown = true;
-                break;
-            }
-        case 'mousemove':
-            {
-                if (volumeMouseDown) {
-                    var halfW = volumeController.offsetWidth >> 1;
-                    if (event.movementX + volumeController.offsetLeft <= volumeSlider.offsetWidth - halfW && event.movementX + volumeController.offsetLeft >= 0 - halfW) {
-                        volumeController.style.left = event.movementX + volumeController.offsetLeft + 'px';
-                        volumeProcessor.style.width = event.movementX + volumeProcessor.offsetWidth + 'px';
-                    }
-                }
-                break;
-            }
-        case 'mouseup':
-            {
-                volumeMouseDown = false;
-                break;
-            }
-    }
+  switch (event.type) {
+    case 'mousedown':
+      {
+        volumeMouseDown = true;
+        break;
+      }
+    case 'mousemove':
+      {
+        if (volumeMouseDown) {
+          var halfW = volumeController.offsetWidth >> 1;
+          if (event.movementX + volumeController.offsetLeft <= volumeSlider.offsetWidth - halfW && event.movementX + volumeController.offsetLeft >= 0 - halfW) {
+            volumeController.style.left = event.movementX + volumeController.offsetLeft + 'px';
+            volumeProcessor.style.width = event.movementX + volumeProcessor.offsetWidth + 'px';
+          }
+        }
+        break;
+      }
+    case 'mouseup':
+      {
+        volumeMouseDown = false;
+        break;
+      }
+  }
 }
 /**
  * 返回当前控制器的百分比位置
@@ -272,6 +294,60 @@ function volumeDragDropHandler(event) {
 function getControllerOffsetPersentPosition() {
   return (controller.offsetLeft + controller.offsetWidth / 2) / slider.offsetWidth;
 }
-
+//测试代码-----开始
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioCtx = new AudioContext();
+//测试代码-----结束
+/**
+ * 通过url来遍历音乐list中的音乐返回音乐object
+ * @param {string} url 
+ */
+function getMusicObjByMusicUrl(url) {
+  var flag = false;
+  var o;
+  musicList.forEach(function (element) {
+    if (url == element.path) {
+      console.log(url == element.path);
+      flag = true;
+      // console.log(element);
+      o = element;
+    }
+  });
+  if (flag == true) {
+    return o;
+  }
+}
+/**
+ * 通过url来遍历音乐list中的音乐返回音乐object
+ * @param {number} sortID 
+ * @return {bject}
+ */
+function getMusicObjBySort(sortID) {
+  var flag = false;
+  var o;
+  musicList.forEach(function (element) {
+    if (sortID == element.sort) {
+      flag = true;
+      o = element;
+    }
+  });
+  if (flag == true) {
+    return o;
+  }
+}
+/**
+ * 通过url来遍历音乐list中的音乐返回音乐object
+ * @param {string} url 
+ * @return {object} MusicInfo
+ */
+function playMusicByMusicUrl(url) {
+  musicPlayer.setAttribute('src', url);
+  musicPlayer.play();
+  setCurrentTitle()
+}
+/**
+ * 通过当前的播放的音乐来设置窗口标题
+ */
+function setCurrentTitle() {
+  windowTitle.innerText = getMusicObjByMusicUrl(musicPlayer.getAttribute('src')).name;
+}

@@ -1,13 +1,13 @@
 
 html,body{
--webkit-user-select: none;
--khtml-user-select: none;
-user-select: none;
-cursor: default;
-/*background-color: #01f0F0;*/
-overflow: hidden;
-
-margin: 0px;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+    cursor: default;
+    /*background-color: #01f0F0;*/
+    overflow: hidden;
+    font-family: sans-serif;
+    margin: 0px;
 }
 .dictorySelecter{
 
@@ -38,19 +38,35 @@ margin: 0px;
     display: inline-block;
 }
 .menu{
-    border:1px solid #000;
+    /*border:1px solid #000;*/
     height: 572px;
     width: 130px;
     display: inline-block;
     position: relative;
+    background-color: #dbd7d6;
+    color: #a5acb1;
+    font-size: 14px;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.menu>.myMusicMenu{
+}
+.menu>.downloadMusicDiv{
+    background-color: #c8c6c5;
+    padding-left: 30px;
+    color: #716f71;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 .neirong{
-    border:1px solid #000;
+    /*border:1px solid #000;*/
     height: 572px;
     width: 646px;
     display: inline-block;
     margin: 0 auto;
     position: fixed;
+    background-color: #fafafa;
 }
 .fileBody{
     /*height: 574px;*/
@@ -100,7 +116,6 @@ td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
 .musicTimer{
     color: #a5acb1;
     font-size: 14px;
-    font-family: sans-serif;
     position: relative;
 }
 .slider{
@@ -140,9 +155,6 @@ td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
     border-radius:50%;
     top: -5px;
     left:-5px;
-}
-.currentTime,.durationTime{
-    padding: 5px;
 }
 
 .volumeSlider{
