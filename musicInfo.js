@@ -8,6 +8,8 @@ musicInfo.prototype = {
   path:"",
   nameElement:'',
   durationElement:'',
+  listElement:'',
+  
   getName:function(){
     return this.name;
   },
@@ -22,6 +24,9 @@ musicInfo.prototype = {
   },
   getDurationElement:function(){
     return this.durationElement;
-  }
+  },
+  getListElement:function(){
+    return this.listElement;
+  },
 }
 module.exports=musicInfo;
