@@ -142,6 +142,7 @@ function addMusicFiles(floder) {
     for (var i = 0; i < files.length; i++) {
       var files_tr = document.createElement('tr');
 
+
       fileList.appendChild(files_tr);
       files_tr.innerHTML = `
                           <td class="col0"></td>
@@ -149,13 +150,7 @@ function addMusicFiles(floder) {
                           <td class="col2">` + '???' + `</td>
                           <td class="col3">` + fileinfo(floder[0].path + '/' + files[i]) + `</td>
                           `;
-      var time_ = 0;
-      if (time_ == 0) {
-        // audioCtx.decodeAudioData(fr.readAsArrayBuffer(new Blob([files[i]], { type: "audio/*" })), function (decodedData) {
-        //   console.log(decodedData);
-        // });
-        time_ = 1;
-      }
+
       var minfo = new musicInfomation();
       minfo.path = floder[0].path + '/' + files[i];
       minfo.name = files[i];
@@ -178,14 +173,44 @@ function addMusicFiles(floder) {
         createInterval();
       })
     }
-    setTimeout(function () {
-      for (index in musicEleArry) {
-        durEleArry[index].innerText = secToTimeFormat(musicEleArry[index].duration);
-        musicEleArry[index].parentElement.removeChild(musicEleArry[index]);
-      }
-    }, 2000);
+    musicList.forEach(function (element) {
+      getDurationFromMusic(element);
+    })
   })
 }
+
+/**
+ * 通过音乐对象来异步获取时间长度并刷新显示
+ * @param {object} mObj 
+ */
+function getDurationFromMusic(mObj) {
+  var promise = new Promise(function (resolve, reject) {
+    var aE = document.createElement('audio');
+    aE.setAttribute('src', mObj.path);
+    document.body.appendChild(aE);
+    aE.addEventListener('loadeddata', function () {
+      resolve(this);
+    })
+    // aE.play();
+  });
+  promise.then(function (date) {
+    mObj.duration = date.duration;
+    mObj.durationElement.innerText = secToTimeFormat(date.duration);
+    destorySelf(date);
+  })
+}
+
+function addAudioElement() {
+  console.log('src');
+}
+function setAudioDuration(audioEle) {
+  return audioEle.duration;
+}
+
+function destorySelf(element) {
+  element.parentElement.removeChild(element);
+}
+
 /**
  * 添加定时器，控制播放器的控制滑块的位置以及当前播放的时间
  * 音乐结束时删除自己
@@ -247,7 +272,9 @@ function dragDropHandler(event) {
           if (event.movementX + controller.offsetLeft <= slider.offsetWidth - halfW && event.movementX + controller.offsetLeft >= 0 - halfW) {
             controller.style.left = event.movementX + controller.offsetLeft + 'px';
             processor.style.width = event.movementX + processor.offsetWidth + 'px';
-            musicTimer.innerText = secToTimeFormat(getControllerOffsetPersentPosition() * musicPlayer.duration) + '/' + secToTimeFormat(musicPlayer.duration);
+            if (musicPlayer.getAttribute('src') && mouseDown) {
+              musicTimer.innerText = secToTimeFormat(getControllerOffsetPersentPosition() * musicPlayer.duration) + '/' + secToTimeFormat(musicPlayer.duration);
+            }
           }
         }
         break;
