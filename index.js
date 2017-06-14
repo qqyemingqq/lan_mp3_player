@@ -5,7 +5,6 @@ var musicIndex = 0;
 var musicInfomation = require("./musicInfo.js");
 var musicList = [];
 var durEleArry = new Array();       //存放每个音乐列表的时间DOM，用作异步读取时间并写入时间
-var musicSrcArry = new Array();     //存放所有音乐地址的信息，随机播放用
 var musicEleArry = new Array();     //用于存放临AudioElement，用作加载音乐读取时间
 var mouseDown = false;              //存放当前鼠标按下状态
 var volumeMouseDown = false;
@@ -89,7 +88,7 @@ function resetPlayerAndRandomPlayNextMusicHandler() {
   controller.style.left = -13 + 'px';
   processor.style.width = 0 + 'px';
   resetMusicTimer();
-  playMusicByMusicUrl(musicList[parseInt(Math.random() * musicSrcArry.length, 10)].path);
+  playMusicByMusicUrl(musicList[parseInt(Math.random() * musicList.length, 10)].path);
 }
 /**
  * 播放器暂停和播放按钮控制切换
@@ -165,7 +164,7 @@ function addMusicFiles(floder) {
       minfo.durationElement = files_tr.getElementsByClassName('col2')[0];
       musicIndex++;
       musicList.push(minfo);
-      musicSrcArry.push(floder[0].path + '/' + files[i]);
+
       var tempAudioElement = document.createElement('audio');
       tempAudioElement.setAttribute('src', floder[0].path + '/' + files[i]);
       tempAudioElement.play();
