@@ -155,8 +155,13 @@ td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
     border-radius:50%;
     top: -5px;
     left:-5px;
+    transition:all .2s ease ;
 }
-
+.slider>.controller>.controllerBorder:hover{
+    box-shadow: 0 0 5px 0px #716f71;
+    transition: all .2s ease;
+    cursor: pointer;
+}
 .volumeSlider{
     display:inline-block;
     width: 50px;
