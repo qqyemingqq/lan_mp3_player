@@ -1,6 +1,7 @@
 var path = require('path');//导入node的path库
 var fs = require('fs');//导入node的fs库
-
+var { ipcRenderer, shell } = require('electron');
+ipcRenderer.send('put-in-tray');
 var musicIndex = 0;
 var musicInfomation = require("./musicInfo.js");
 var musicList = [];
@@ -8,9 +9,9 @@ var durEleArry = new Array();       //存放每个音乐列表的时间DOM，用
 var musicEleArry = new Array();     //用于存放临AudioElement，用作加载音乐读取时间
 var mouseDown = false;              //存放当前鼠标按下状态
 var volumeMouseDown = false;
-var fr = new FileReader();
 var dictorySelecter = document.querySelector('.dictorySelecter');//选择音乐路径控件
 var windowTitle = document.querySelector('.windowTitle');//获取窗体名称，控制任务栏显示的歌曲名字
+var dirUrl = document.querySelector('.dirUrl');//获取显示的路径
 var fileList = document.querySelector('#fileListTable');//获取音乐播放器列表容器
 var musicPlayer = document.querySelector('.musicPlayer');//播放器主体
 var processor = document.querySelector('.processor');//红色进度条
@@ -30,6 +31,16 @@ var volumeProcessor = document.querySelector('.volumeProcessor');//音量进度�
 var volumeController = document.querySelector('.volumeController');//音量控制器
 var volumeSlider = document.querySelector('.volumeSlider');//音量控制器
 
+var crossButton = document.querySelector('.crossButton');//音量控制器
+var minusButton = document.querySelector('.minusButton');//音量控制器
+
+var canvas = document.querySelector('.visualizer');
+var canvasCtx = canvas.getContext("2d");
+
+var geci = document.querySelector('.geci');//歌词
+geci.style.right = 0 + 'px';
+geci.style.top = parseInt(canvas.getBoundingClientRect().top) + 'px';
+
 dictorySelecter.addEventListener('change', folderSelectedHandler, false);
 musicPlayer.addEventListener('pause', setPlayButtonToPlayHandler);
 musicPlayer.addEventListener('play', setPlayButtonToPauseHandler);
@@ -39,6 +50,8 @@ nextButton.addEventListener('pointerup', setNextMusicHandler);
 previousButton.addEventListener('pointerup', setPreviousMusicHandler);
 controller.addEventListener('mousedown', dragDropHandler);
 volumeController.addEventListener('mousedown', volumeDragDropHandler);
+minusButton.addEventListener('mousedown', minusWindow);
+crossButton.addEventListener('mousedown', closeWindow);
 window.addEventListener('mousemove', dragDropHandler);
 window.addEventListener('mousemove', volumeDragDropHandler);
 window.addEventListener('mouseup', dragDropHandler);
@@ -108,6 +121,10 @@ function musicPlayAndPauseChangeHandler() {
  */
 function folderSelectedHandler(event) {
   addMusicFiles(event.target.files);
+  dirUrl.innerText = event.target.files[0].path;
+  dirUrl.addEventListener('click', () => {
+    shell.showItemInFolder(dirUrl.innerText)
+  })
   this.select();
   window.parent.document.body.focus();
 }
@@ -145,7 +162,7 @@ function addMusicFiles(floder) {
 
       fileList.appendChild(files_tr);
       files_tr.innerHTML = `
-                          <td class="col0"></td>
+                          <td class="col0">` + (parseInt(musicIndex) + 1) + `</td>
                           <td class="col1">` + files[i] + `</td>
                           <td class="col2">` + '???' + `</td>
                           <td class="col3">` + fileinfo(floder[0].path + '/' + files[i]) + `</td>
@@ -155,18 +172,13 @@ function addMusicFiles(floder) {
       minfo.path = floder[0].path + '/' + files[i];
       minfo.name = files[i];
       minfo.sort = musicIndex;
+      minfo.indexElement = files_tr.getElementsByClassName('col0')[0];
       minfo.nameElement = files_tr.getElementsByClassName('col1')[0];
       minfo.durationElement = files_tr.getElementsByClassName('col2')[0];
+      minfo.listElement = files_tr;
       musicIndex++;
       musicList.push(minfo);
 
-      var tempAudioElement = document.createElement('audio');
-      tempAudioElement.setAttribute('src', floder[0].path + '/' + files[i]);
-      tempAudioElement.play();
-      tempAudioElement.volume = 0;
-      document.body.appendChild(tempAudioElement);
-      musicEleArry.push(tempAudioElement);
-      durEleArry.push(files_tr.getElementsByClassName('col2')[0]);
       files_tr.addEventListener('dblclick', function () {
         var _src = floder[0].path + '/' + this.getElementsByClassName('col1')[0].innerText;
         playMusicByMusicUrl(_src);
@@ -303,15 +315,15 @@ function volumeDragDropHandler(event) {
           if (event.movementX + volumeController.offsetLeft <= volumeSlider.offsetWidth - halfW && event.movementX + volumeController.offsetLeft >= 0 - halfW) {
             volumeController.style.left = event.movementX + volumeController.offsetLeft + 'px';
             volumeProcessor.style.width = event.movementX + volumeProcessor.offsetWidth + 'px';
+            musicPlayer.volume = getVolumeControllerOffsetPersentPosition();
           }
         }
         break;
       }
-    case 'mouseup':
-      {
-        volumeMouseDown = false;
-        break;
-      }
+    case 'mouseup': {
+      volumeMouseDown = false;
+      break;
+    }
   }
 }
 /**
@@ -320,10 +332,20 @@ function volumeDragDropHandler(event) {
 function getControllerOffsetPersentPosition() {
   return (controller.offsetLeft + controller.offsetWidth / 2) / slider.offsetWidth;
 }
-//测试代码-----开始
-var AudioContext = window.AudioContext || window.webkitAudioContext;
-var audioCtx = new AudioContext();
-//测试代码-----结束
+/**
+ * 
+ */
+function getVolumeControllerOffsetPersentPosition() {
+  var value = (volumeController.offsetLeft + volumeController.offsetWidth / 2) / volumeSlider.offsetWidth;
+  if (value > 1) {
+    return 1;
+  } else if (value < 0) {
+    return 0;
+  } else {
+    return value;
+  }
+}
+
 /**
  * 通过url来遍历音乐list中的音乐返回音乐object
  * @param {string} url 
@@ -333,7 +355,6 @@ function getMusicObjByMusicUrl(url) {
   var o;
   musicList.forEach(function (element) {
     if (url == element.path) {
-      console.log(url == element.path);
       flag = true;
       // console.log(element);
       o = element;
@@ -346,7 +367,7 @@ function getMusicObjByMusicUrl(url) {
 /**
  * 通过url来遍历音乐list中的音乐返回音乐object
  * @param {number} sortID 
- * @return {bject}
+ * @return {object} musicInfo
  */
 function getMusicObjBySort(sortID) {
   var flag = false;
@@ -364,11 +385,19 @@ function getMusicObjBySort(sortID) {
 /**
  * 通过url来遍历音乐list中的音乐返回音乐object
  * @param {string} url 
- * @return {object} MusicInfo
  */
 function playMusicByMusicUrl(url) {
+  var o = getMusicObjByMusicUrl(musicPlayer.getAttribute('src'));
+  if (o) {
+    o.indexElement.innerText = o.sort + 1;
+    o.listElement.style.backgroundColor = ''
+  }
   musicPlayer.setAttribute('src', url);
   musicPlayer.play();
+  o = getMusicObjByMusicUrl(url);
+  o.indexElement.innerText = '♫';
+  o.listElement.style.backgroundColor = '#c8c6c5'
+  console.log();
   setCurrentTitle()
 }
 /**
@@ -377,3 +406,101 @@ function playMusicByMusicUrl(url) {
 function setCurrentTitle() {
   windowTitle.innerText = getMusicObjByMusicUrl(musicPlayer.getAttribute('src')).name;
 }
+
+function closeWindow() {
+  ipcRenderer.send('window-all-closed');
+}
+function minusWindow() {
+
+  ipcRenderer.send('hide-window');
+}
+
+var audioCtx = new AudioContext();
+var source = audioCtx.createMediaElementSource(musicPlayer);
+var analyser = audioCtx.createAnalyser();
+analyser.minDecibels = -90;
+analyser.maxDecibels = -10;
+analyser.smoothingTimeConstant = 0.85;
+var ratio = (window.devicePixelRatio || 1) / (canvasCtx.backingStorePixelRatio || 1);//获取当前设备设备像素比
+source.connect(analyser);
+analyser.connect(audioCtx.destination);
+visualize(analyser);
+
+function visualize(analyser) {
+  cheight = canvas.height;
+  cwidth = canvas.width;
+  meterWidth = 10 //频谱条宽度
+  gap = 1 //频谱条间距
+  capHeight = 2
+  capStyle = '#fff'
+  meterNum = 800 / (meterWidth + capHeight) + 5 //频谱条数量
+  capYPositionArray = []; //将上一画面各帽头的位置保存到这个数组
+  ctx = canvas.getContext('2d')
+  gradient = ctx.createLinearGradient(0, 0, 0, 300);
+  gradient.addColorStop(1, '#000f00');
+  gradient.addColorStop(0.5, '#ff0');
+  gradient.addColorStop(0, '#f00');
+  var drawMeter = function () {
+    var array = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(array);
+    var step = Math.round(array.length / meterNum); //计算采样步长
+    ctx.clearRect(0, 0, cwidth, cheight);
+    for (var i = 0; i < meterNum; i++) {
+      var value = array[i * step]; //获取当前能量值
+      if (value >= cheight) {
+        value = cheight;
+      }
+      if (capYPositionArray.length < Math.round(meterNum)) {
+        capYPositionArray.push(value); //初始化保存帽头位置的数组，将第一个画面的数据压入其中
+      };
+      ctx.fillStyle = capStyle;
+      //开始绘制帽头
+      if (value < capYPositionArray[i]) { //如果当前值小于之前值
+        ctx.fillRect(i * (meterWidth + gap), cheight - (--capYPositionArray[i]), meterWidth * ratio, capHeight * ratio); //则使用前一次保存的值来绘制帽头
+      } else {
+        ctx.fillRect(i * (meterWidth + gap), cheight - value, meterWidth * ratio, capHeight * ratio); //否则使用当前值直接绘制
+        capYPositionArray[i] = value;
+      };
+      //开始绘制频谱条
+      ctx.fillStyle = gradient;
+      ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth * ratio, cheight * ratio);
+    }
+    requestAnimationFrame(drawMeter);
+  }
+  requestAnimationFrame(drawMeter);
+}
+
+var lyric;
+/**
+ * 获取歌词文件
+ * @param {string} str 
+ */
+function readLyricString() {
+  loadSound("C:/Users/Ye/Desktop/lan_mp3_player/lyric/梁咏琪-胆小鬼.lyc"); 
+  function loadSound(url) {
+    var request = new XMLHttpRequest(); 
+    // http://ttlyrics.com/api/download/?id=1276065271
+    request.open('GET', url, true); 
+    request.responseType = 'text'; 
+    request.onload = function () {
+      var lyric = request.response;
+      decodeLyricString(lyric)
+    }
+    request.send();
+  }
+}
+
+/**
+ * 解析歌词返回歌词数组
+ * @param {string} arr 
+ * @return {[]}
+ */
+function decodeLyricString(str) {
+  var arr = str.split('\n');
+  // console.log(arr);
+  arr.forEach((value)=>{
+    console.log(value);
+  })
+}
+readLyricString()
+

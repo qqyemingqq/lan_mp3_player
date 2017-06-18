@@ -9,9 +9,6 @@ html,body{
     font-family: sans-serif;
     margin: 0px;
 }
-.dictorySelecter{
-
-}
 
 .musicHeadDiv{
     background: #c62f2f;
@@ -31,26 +28,25 @@ html,body{
     bottom: 0px;
 }
 .fileArea{
-    height: 100%;
+    height: 429px;
     width: 100%;
-    /*border:1px solid #000;*/
-    overflow: hidden;
+    border-top:1px solid #c6c6c6;
     display: inline-block;
 }
 .menu{
     /*border:1px solid #000;*/
-    height: 572px;
+    height: 450px;
     width: 130px;
     display: inline-block;
     position: relative;
     background-color: #dbd7d6;
     color: #a5acb1;
     font-size: 14px;
+}
+.menu>.myMusicMenu{
     padding-left: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
-}
-.menu>.myMusicMenu{
 }
 .menu>.downloadMusicDiv{
     background-color: #c8c6c5;
@@ -61,7 +57,7 @@ html,body{
 }
 .neirong{
     /*border:1px solid #000;*/
-    height: 572px;
+    height: 450px;
     width: 646px;
     display: inline-block;
     margin: 0 auto;
@@ -69,8 +65,9 @@ html,body{
     background-color: #fafafa;
 }
 .fileBody{
-    /*height: 574px;*/
-    /*overflow: scroll;*/
+    /*border:1px solid #000;*/
+    height: 404px;
+    overflow-y: scroll;
 }
 table{
     width: 100%;
@@ -85,14 +82,14 @@ tr{
 tr:hover {
     background-color: #01f0F0;
     color: #fff;
-    cursor:hand;
+    cursor:pointer;
 }
 td{
     height: 20px;
     padding: 0px;
 }
 th,td{text-overflow : clip}
-th.col0,td.col0{max-width:20px;min-width:20px; width: 20px}
+th.col0,td.col0{max-width:30px;min-width:30px; width: 30px;text-align: center}
 th.col1,td.col1{min-width:calc(100% - 160px);max-width:calc(100% - 160px);width: calc(100% - 160px)}
 th.col3{min-width: 96px; max-width:96px;width: 96px}
 td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
@@ -173,7 +170,7 @@ td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
     position: relative;
     }
 .volumeSlider>.volumeProcessor{
-    width: 4px;
+    width: 100%;
     height: 100%;
     background-color: #e83c3c;
     border-radius: 6px;
@@ -187,5 +184,58 @@ td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
     background-color: #fff;
     border-radius:50%;
     top: -4px;
-    left:-6px;
+    left:46px;
+}
+.palyerTitle{
+    margin: 10px;
+    position: relative;
+}
+.crossButton{
+    float: right;
+    position: relative;
+    margin: 9px;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+}
+.minusButton{
+    float: right;
+    position: relative;
+    margin-top: 21px;
+    margin-bottom: 21px;
+    margin-left: 9px;
+    margin-right: 9px;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+}
+.crossButton:hover{
+    cursor: pointer;    
+    -webkit-app-region: no-drag;
+}
+
+.visualizer{
+    /*border:1px solid #000;*/
+    display: block;
+    position: relative;
+    width: 776px;
+    height: 121px;
+    background-color: rgb(100, 100, 100);
+}
+.ui_button{
+    border: 1px solid black;
+    font-size: 12px; 
+    border-radius: 3px;
+}
+.dirUrl{
+    color: #595959;
+}
+.dirUrl{
+    color: grey;
+    font-size: 12px;
+    position: relative;
+    cursor: pointer;
+    /*display: none;*/
+}
+.geci{
+    position: fixed;
+    z-index: 12;
 }

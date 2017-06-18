@@ -9,6 +9,7 @@ musicInfo.prototype = {
   nameElement:'',
   durationElement:'',
   listElement:'',
+  indexElement:'',
   
   getName:function(){
     return this.name;

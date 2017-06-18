@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron')
+const { app, BrowserWindow, ipcMain, Tray, Menu } = require('electron')
 const path = require('path')
 const url = require('url')
 
@@ -6,16 +6,17 @@ const url = require('url')
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 780,
+    width: 776,
     height: 670,
-    // height: 908,
+    // width: 908,
     transparent: true,
     frame: false,
     backgroundColor: '#fafafa',
-    resizable:false,
+    resizable: false,
+    icon:'./res/musicOn.png',
     // thickFrame:false
   });//,transparent: true,frame: false
 
@@ -27,7 +28,7 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -62,3 +63,48 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+ipcMain.on('window-all-closed', () => {
+  app.quit();
+});
+ipcMain.on('hide-window', () => {
+  win.hide();
+});
+ipcMain.on('restore-window', () => {
+  win.show();
+});
+let appIcon = null
+
+ipcMain.on('put-in-tray', function (event) {
+  const iconName = process.platform === 'win32' ? './res/musicOn.png' : './res/musicOn.png'
+  const iconPath = path.join(__dirname, iconName)
+  if (!appIcon) {
+    appIcon = new Tray(iconPath)
+  }
+  const contextMenu = Menu.buildFromTemplate([{
+    label: '移除',
+    click: function () {
+      appIcon.destroy();
+      win.show();
+    }
+  }, {
+    label: '还原',
+    click: function () {
+      win.show();
+    }
+  }, {
+    label: '退出',
+    click: function () {
+      app.quit();
+    }
+  }
+  ])
+  appIcon.setToolTip('小明播放器')
+  appIcon.setContextMenu(contextMenu)
+  appIcon.addListener('double-click', () => {
+    win.show();
+  })
+})
+
+app.on('window-all-closed', function () {
+  if (appIcon) appIcon.destroy()
+})

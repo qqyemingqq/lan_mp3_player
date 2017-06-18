@@ -9,17 +9,24 @@
 </head>
 
 <body>
-  <div class="musicHeadDiv"></div>
+  <label class="geci">歌词</label>
+  <div class="musicHeadDiv">
+    <image class="palyerTitle" src="./res/titlePng.png"></image>
+    <image class="crossButton" src="./res/cross.png"></image>
+    <image class="minusButton" src="./res/minus.png"></image>
+  </div>
   <label id="mousePosition" style="position:absolute"></label>
   <div class="menu">
-    <label class="myMusicMenu">我的音乐&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;></label>
+    <label class="myMusicMenu">我的音乐&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;></label>
     <div class="downloadMusicDiv">
     <text class="downloadMusic">下载的音乐</text>
     </div>
   </div>
   <div class="neirong">
-    <text>请选择音乐地址：</text>
-    <input type='file' accept="audio/*" value='选择文件夹' class="dictorySelecter" onclick='' webkitdirectory/>
+    <!--<text>请选择音乐地址：</text>-->
+    <label class="ui_button" for="inputButton">请选择文件夹</label>
+    <label class="dirUrl">没有选择目录</label>
+    <form><input id="inputButton" type='file' style="position:absolute;clip:rect(0 0 0 0);" accept="audio/*" class="dictorySelecter" webkitdirectory/></form>
   <div class="fileArea">
     <div class="fileHead">
       <table>
@@ -38,7 +45,7 @@
     </div>
   </div>
   </div>
-
+  <canvas class="visualizer" width="786px" height="121px"></canvas>
   <div class="bottomController">
     <div class="player">
       <div class="playerControllers">
@@ -52,7 +59,7 @@
           <div class="controllerBorder"></div>
         </div>
       </div>
-      <text class="musicTimer">00:00/00:55</text>
+      <text class="musicTimer">00:00/00:00</text>
       <image class="playButton" src="./res/volume.png"></image>
 
       <div class="volumeSlider">
@@ -62,7 +69,7 @@
 
     </div>
   </div>
-  <audio class="musicPlayer"> </audio>
+  <audio class="musicPlayer" crossOrigin="anonymous"> </audio>
   <script src="index.js" type="text/javascript"></script>
 </body>
 
