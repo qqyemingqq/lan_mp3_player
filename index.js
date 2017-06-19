@@ -5,7 +5,9 @@ ipcRenderer.send('put-in-tray');
 var musicIndex = 0;
 var musicInfomation = require("./musicInfo.js");
 var lyricInfo = require("./lyricInfo.js");
+var findLyric = false;
 var musicList = [];
+var soundID = 0;
 var currentLyric = [];
 var durEleArry = new Array();       //存放每个音乐列表的时间DOM，用作异步读取时间并写入时间
 var musicEleArry = new Array();     //用于存放临AudioElement，用作加载音乐读取时间
@@ -114,6 +116,7 @@ function musicPlayAndPauseChangeHandler() {
       musicPlayer.pause();
     } else {
       musicPlayer.play();
+  findLyric = false;
     }
   }
 }
@@ -124,6 +127,8 @@ function musicPlayAndPauseChangeHandler() {
 function folderSelectedHandler(event) {
   addMusicFiles(event.target.files);
   dirUrl.innerText = event.target.files[0].path;
+  // currentLyric=[];
+  geci.innerText = '';
   dirUrl.addEventListener('click', () => {
     shell.showItemInFolder(dirUrl.innerText)
   })
@@ -215,7 +220,7 @@ function getDurationFromMusic(mObj) {
 }
 
 function addAudioElement() {
-  console.log('src');
+  // TODO
 }
 function setAudioDuration(audioEle) {
   return audioEle.duration;
@@ -235,6 +240,11 @@ function createInterval() {
       musicTimer.innerText = secToTimeFormat(musicPlayer.currentTime) + '/' + secToTimeFormat(musicPlayer.duration);
       controller.style.left = (musicPlayer.currentTime / musicPlayer.duration) * slider.offsetWidth - controller.offsetWidth / 2 + 'px';
       processor.style.width = (musicPlayer.currentTime / musicPlayer.duration) * slider.offsetWidth + 'px';
+      if (!findLyric) {
+        searchLyric(getMusicObjByMusicUrl(musicPlayer.getAttribute('src')).name);
+        findLyric = true;
+      }
+      geci.innerText = displayLyric(currentLyric);
       if (musicPlayer.end) {
         window.clearInterval(musicDuration);
       }
@@ -357,7 +367,6 @@ function getMusicObjByMusicUrl(url) {
   musicList.forEach(function (element) {
     if (url == element.path) {
       flag = true;
-      // console.log(element);
       o = element;
     }
   });
@@ -395,10 +404,10 @@ function playMusicByMusicUrl(url) {
   }
   musicPlayer.setAttribute('src', url);
   musicPlayer.play();
+  findLyric = false;
   o = getMusicObjByMusicUrl(url);
   o.indexElement.innerText = '♫';
   o.listElement.style.backgroundColor = '#c8c6c5'
-  console.log();
   setCurrentTitle()
 }
 /**
@@ -475,19 +484,33 @@ var lyric;
  * 获取歌词文件
  * @param {string} str 
  */
-function readLyricString() {
-  loadSound("./lyric/梁咏琪-胆小鬼.lyc");
-  function loadSound(url) {
+function readLyricString(id) {
+  loadSound(id);
+  function loadSound(id) {
     var request = new XMLHttpRequest();
     // http://ttlyrics.com/api/download/?id=1276065271
+    url = 'http://ttlyrics.com/api/download/?id=' + id
     request.open('GET', url, true);
     request.responseType = 'text';
     request.onload = function () {
       var lyric = request.response;
-      decodeLyricString(lyric)
+      currentLyric = decodeLyricString(lyric);
     }
     request.send();
   }
+}
+
+// 
+function searchLyric(name) {
+  var request = new XMLHttpRequest();
+  url = 'http://ttlyrics.com/api/search/common/?title=' + name + '&artist='
+  request.open('GET', url, true);
+  request.responseType = 'text';
+  request.onload = function () {
+    soundID = (request.response).match(/id="([-\d]{3,})"/)[1];
+    readLyricString(soundID);
+  }
+  request.send();
 }
 
 /**
@@ -498,12 +521,10 @@ function readLyricString() {
 function decodeLyricString(str) {
   lyr = [];
   var arr = str.split('\n');
-  // console.log(arr);
+  arr.pop(arr.length-1);
   arr.forEach((value) => {
     var t = lyricTimeToSec(value.match(/\[\d+:\d+\.\d+\]/g));
     var word = value.replace(/\[\d+:\d+\.\d+\]/g, '');
-    console.log(word);
-    console.log(t);
     t.forEach(function (val) {
       var li = new lyricInfo();
       li.time = val;
@@ -511,9 +532,8 @@ function decodeLyricString(str) {
       lyr.push(li);
     }, this);
   })
-  console.log(lyr);
+  return lyr;
 }
-readLyricString()
 
 
 function lyricTimeToSec(arr) {
@@ -531,3 +551,23 @@ function lyricTimeToSec(arr) {
   return time;
 }
 
+/**
+ * 返回当前的歌词
+ * @param {[]} lyricArray 
+ */
+function displayLyric(lyricArray) {
+  var singleWord = '';
+  var deltaTime = 99999;
+  if (lyricArray.length == 0) {
+    singleWord = '暂无歌词';
+  } else {
+    lyricArray.forEach(function (val) {
+      if (musicPlayer.currentTime - val.time >= 0 && deltaTime > musicPlayer.currentTime - val.time) {
+        deltaTime = musicPlayer.currentTime - val.time;
+        singleWord = val.words;
+      }
+    }, this);
+
+  }
+  return singleWord;
+}

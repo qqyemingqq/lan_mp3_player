@@ -238,4 +238,7 @@ td.col3,th.col2,td.col2{min-width: 80px; max-width:80px;width: 80px}
 .geci{
     position: fixed;
     z-index: 12;
+    font-size: 40px;
+    color: #33ccff;
+    text-shadow: 3px 5px 8px #0e0808;
 }
