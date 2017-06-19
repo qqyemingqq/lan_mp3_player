@@ -4,7 +4,9 @@ var { ipcRenderer, shell } = require('electron');
 ipcRenderer.send('put-in-tray');
 var musicIndex = 0;
 var musicInfomation = require("./musicInfo.js");
+var lyricInfo = require("./lyricInfo.js");
 var musicList = [];
+var currentLyric = [];
 var durEleArry = new Array();       //存放每个音乐列表的时间DOM，用作异步读取时间并写入时间
 var musicEleArry = new Array();     //用于存放临AudioElement，用作加载音乐读取时间
 var mouseDown = false;              //存放当前鼠标按下状态
@@ -345,7 +347,6 @@ function getVolumeControllerOffsetPersentPosition() {
     return value;
   }
 }
-
 /**
  * 通过url来遍历音乐list中的音乐返回音乐object
  * @param {string} url 
@@ -406,7 +407,6 @@ function playMusicByMusicUrl(url) {
 function setCurrentTitle() {
   windowTitle.innerText = getMusicObjByMusicUrl(musicPlayer.getAttribute('src')).name;
 }
-
 function closeWindow() {
   ipcRenderer.send('window-all-closed');
 }
@@ -476,12 +476,12 @@ var lyric;
  * @param {string} str 
  */
 function readLyricString() {
-  loadSound("C:/Users/Ye/Desktop/lan_mp3_player/lyric/梁咏琪-胆小鬼.lyc"); 
+  loadSound("./lyric/梁咏琪-胆小鬼.lyc");
   function loadSound(url) {
-    var request = new XMLHttpRequest(); 
+    var request = new XMLHttpRequest();
     // http://ttlyrics.com/api/download/?id=1276065271
-    request.open('GET', url, true); 
-    request.responseType = 'text'; 
+    request.open('GET', url, true);
+    request.responseType = 'text';
     request.onload = function () {
       var lyric = request.response;
       decodeLyricString(lyric)
@@ -496,11 +496,38 @@ function readLyricString() {
  * @return {[]}
  */
 function decodeLyricString(str) {
+  lyr = [];
   var arr = str.split('\n');
   // console.log(arr);
-  arr.forEach((value)=>{
-    console.log(value);
+  arr.forEach((value) => {
+    var t = lyricTimeToSec(value.match(/\[\d+:\d+\.\d+\]/g));
+    var word = value.replace(/\[\d+:\d+\.\d+\]/g, '');
+    console.log(word);
+    console.log(t);
+    t.forEach(function (val) {
+      var li = new lyricInfo();
+      li.time = val;
+      li.words = word;
+      lyr.push(li);
+    }, this);
   })
+  console.log(lyr);
 }
 readLyricString()
+
+
+function lyricTimeToSec(arr) {
+  var time = [];
+  arr.forEach(function (value) {
+    var a = value.match(/\d+/g);
+    time.push(toTime(a));
+  });
+  function toTime(arr) {
+    var fen = parseInt(arr[0]) * 60;
+    var miao = parseInt(arr[1]);
+    var fmiao = parseInt(arr[2]) / 100;
+    return fen + miao + fmiao
+  }
+  return time;
+}
 
