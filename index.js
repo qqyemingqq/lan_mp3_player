@@ -559,7 +559,7 @@ function displayLyric(lyricArray) {
   var singleWord = '';
   var deltaTime = 99999;
   if (lyricArray.length == 0) {
-    singleWord = '暂无歌词';
+    singleWord = '获取歌词中';
   } else {
     lyricArray.forEach(function (val) {
       if (musicPlayer.currentTime - val.time >= 0 && deltaTime > musicPlayer.currentTime - val.time) {
