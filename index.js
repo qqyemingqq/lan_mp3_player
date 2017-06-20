@@ -5,6 +5,7 @@ ipcRenderer.send('put-in-tray');
 var musicIndex = 0;
 var musicInfomation = require("./musicInfo.js");
 var lyricInfo = require("./lyricInfo.js");
+var jsmediatags = require("./jsmediatags.min.js");
 var findLyric = false;
 var musicList = [];
 var soundID = 0;
@@ -116,7 +117,7 @@ function musicPlayAndPauseChangeHandler() {
       musicPlayer.pause();
     } else {
       musicPlayer.play();
-  findLyric = false;
+      findLyric = false;
     }
   }
 }
@@ -183,6 +184,15 @@ function addMusicFiles(floder) {
       minfo.nameElement = files_tr.getElementsByClassName('col1')[0];
       minfo.durationElement = files_tr.getElementsByClassName('col2')[0];
       minfo.listElement = files_tr;
+      var minfoTagInfo = getTagFromFile(floder[0].path + '/' + files[i]);
+        console.log(minfoTagInfo.artist,minfoTagInfo.title);      
+      if (minfoTagInfo.length != 0) {
+        minfo.title = minfoTagInfo['title'];
+        minfo.artist = minfoTagInfo['artist'];
+        // minfo.title = minfoTagInfo.title;
+        // minfo.artist = minfoTagInfo.artist;
+        // console.log(minfoTagInfo["artist"]);
+      }
       musicIndex++;
       musicList.push(minfo);
 
@@ -241,7 +251,8 @@ function createInterval() {
       controller.style.left = (musicPlayer.currentTime / musicPlayer.duration) * slider.offsetWidth - controller.offsetWidth / 2 + 'px';
       processor.style.width = (musicPlayer.currentTime / musicPlayer.duration) * slider.offsetWidth + 'px';
       if (!findLyric) {
-        searchLyric(getMusicObjByMusicUrl(musicPlayer.getAttribute('src')).name);
+        mO = getMusicObjByMusicUrl(musicPlayer.getAttribute('src'));
+        searchLyric(mO.title,mO.artist);
         findLyric = true;
       }
       geci.innerText = displayLyric(currentLyric);
@@ -501,9 +512,11 @@ function readLyricString(id) {
 }
 
 // 
-function searchLyric(name) {
+function searchLyric(title, artist = '') {
+  if (title == '' || title == undefined) return;
   var request = new XMLHttpRequest();
-  url = 'http://ttlyrics.com/api/search/common/?title=' + name + '&artist='
+  url = 'http://ttlyrics.com/api/search/common/?title=' + title + '&artist='+artist
+  console.log(url);
   request.open('GET', url, true);
   request.responseType = 'text';
   request.onload = function () {
@@ -521,7 +534,7 @@ function searchLyric(name) {
 function decodeLyricString(str) {
   lyr = [];
   var arr = str.split('\n');
-  arr.pop(arr.length-1);
+  arr.pop(arr.length - 1);
   arr.forEach((value) => {
     var t = lyricTimeToSec(value.match(/\[\d+:\d+\.\d+\]/g));
     var word = value.replace(/\[\d+:\d+\.\d+\]/g, '');
@@ -570,4 +583,19 @@ function displayLyric(lyricArray) {
 
   }
   return singleWord;
+}
+
+
+function getTagFromFile(file) {
+  var tagInfo = {'title':'','artist':''}
+  jsmediatags.read(file, {
+    onSuccess: function (tag) {
+      tagInfo['title'] = tag.tags.TIT2.data;
+      tagInfo['artist'] = tag.tags.TPE1.data;
+    },
+    onError: function (error) {
+      console.log(error);
+    }
+  });
+  return tagInfo;
 }

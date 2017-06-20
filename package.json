@@ -12,5 +12,8 @@
       "pack": "build --dir",
       "dist": "build"
     }
+  },
+  "dependencies": {
+    "jsmediatags": "^3.5.0"
   }
 }
