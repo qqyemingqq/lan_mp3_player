@@ -1,6 +1,7 @@
-const { app, BrowserWindow, ipcMain, Tray, Menu } = require('electron')
+const { app, BrowserWindow, ipcMain, Tray, Menu, globalShortcut } = require('electron')
 const path = require('path')
 const url = require('url')
+const menu = new Menu()
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -16,16 +17,29 @@ function createWindow() {
     frame: false,
     backgroundColor: '#fafafa',
     resizable: false,
-    icon:'./res/musicOn.png',
+    icon: './res/musicOn.png',
     // thickFrame:false
   });//,transparent: true,frame: false
 
+  win.setThumbarButtons([
+    {
+      tooltip: 'button1',
+      icon: './res/musicOn.png',
+      click() { console.log('button1 clicked') }
+    },
+    {
+      tooltip: 'button2',
+      icon: './res/musicOn.png',
+      flags: ['enabled', 'dismissonclick'],
+      click() { console.log('button2 clicked.') }
+    }
+  ]);
   // and load the index.html of the app.
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
     protocol: 'file:',
     slashes: true
-  }))
+  }));
 
   // Open the DevTools.
   // win.webContents.openDevTools()
@@ -37,8 +51,29 @@ function createWindow() {
     // when you should delete the corresponding element.
     win = null
   })
-}
+  globalShortcut.register('CommandOrControl+Alt+Right', () => {
+    //下一首
+    shortCutControlPlayer('next');
+  })
+  globalShortcut.register('CommandOrControl+Alt+left', () => {
+    //上一首
+    shortCutControlPlayer('previous');
+  })
+  globalShortcut.register('CommandOrControl+Alt+Down', () => {
+    //暂停
+    shortCutControlPlayer('stop');
+  })
+  globalShortcut.register('CommandOrControl+Alt+Up', () => {
+    //随机
+    shortCutControlPlayer('ramdom');
+  })
 
+}
+function shortCutControlPlayer(order) {
+  ipcMain.once('asynchronous-message', (event, arg) => {
+    event.sender.send('asynchronous-message', order)
+  })
+}
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -53,11 +88,12 @@ app.on('window-all-closed', () => {
   }
 })
 
+
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (win === null) {
-    createWindow()
+    createWindow();
   }
 })
 

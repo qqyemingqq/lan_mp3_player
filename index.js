@@ -61,6 +61,30 @@ window.addEventListener('mousemove', volumeDragDropHandler);
 window.addEventListener('mouseup', dragDropHandler);
 window.addEventListener('mouseup', volumeDragDropHandler);
 
+ipcRenderer.on('asynchronous-message', (event, arg) => {
+  console.log(arg);
+  switch (arg) {
+    case 'next':
+      setNextMusicHandler();
+      break;
+    case 'previous':
+      setPreviousMusicHandler();
+      break;
+    case 'stop':
+      if (musicPlayer.paused) {
+        setPlayButtonToPauseHandler();
+      } else {
+        setPlayButtonToPlayHandler();
+      }
+      break;
+    case 'ramdom':
+      resetPlayerAndRandomPlayNextMusicHandler();
+      break;
+
+    default:
+      break;
+  }
+})
 /**
  * 播放上一首
  */
@@ -435,7 +459,7 @@ visualize(analyser);
 function visualize(analyser) {
   cheight = canvas.height;
   cwidth = canvas.width;
-  meterWidth = 4 //频谱条宽度
+  meterWidth = 8 //频谱条宽度
   gap = 2 //频谱条间距
   capHeight = 2
   capStyle = '#fff'
