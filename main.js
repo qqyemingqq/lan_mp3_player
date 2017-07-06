@@ -24,12 +24,12 @@ function createWindow() {
   win.setThumbarButtons([
     {
       tooltip: 'button1',
-      icon: './res/musicOn.png',
+      icon: path.join(__dirname, './res/musicOn.png'),
       click() { console.log('button1 clicked') }
     },
     {
       tooltip: 'button2',
-      icon: './res/musicOn.png',
+      icon: path.join(__dirname, './res/musicOn.png'),
       flags: ['enabled', 'dismissonclick'],
       click() { console.log('button2 clicked.') }
     }
@@ -70,9 +70,7 @@ function createWindow() {
 
 }
 function shortCutControlPlayer(order) {
-  ipcMain.once('asynchronous-message', (event, arg) => {
-    event.sender.send('asynchronous-message', order)
-  })
+  win.webContents.send('ControlPlayer', order)
 }
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

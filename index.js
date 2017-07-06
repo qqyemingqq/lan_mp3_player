@@ -61,7 +61,7 @@ window.addEventListener('mousemove', volumeDragDropHandler);
 window.addEventListener('mouseup', dragDropHandler);
 window.addEventListener('mouseup', volumeDragDropHandler);
 
-ipcRenderer.on('asynchronous-message', (event, arg) => {
+ipcRenderer.on('ControlPlayer', (event, arg) => {
   console.log(arg);
   switch (arg) {
     case 'next':
@@ -71,11 +71,7 @@ ipcRenderer.on('asynchronous-message', (event, arg) => {
       setPreviousMusicHandler();
       break;
     case 'stop':
-      if (musicPlayer.paused) {
-        setPlayButtonToPauseHandler();
-      } else {
-        setPlayButtonToPlayHandler();
-      }
+      musicPlayAndPauseChangeHandler();
       break;
     case 'ramdom':
       resetPlayerAndRandomPlayNextMusicHandler();
@@ -470,6 +466,7 @@ function visualize(analyser) {
   gradient.addColorStop(1, '#000f00');
   gradient.addColorStop(0.5, '#ff0');
   gradient.addColorStop(0, '#f00');
+  var test = '#000';
   var key = true;
   var drawMeter = function () {
     var array = new Uint8Array(analyser.frequencyBinCount);
@@ -484,6 +481,7 @@ function visualize(analyser) {
       arr.push((n / step) << 0);
     }
     array = arr;
+    var previousArray;//上一帧频谱条位置
     for (var i = 0; i < meterNum; i++) {
       var value = array[i]; //获取当前能量值    * step
       if (value >= cheight) {
@@ -502,10 +500,28 @@ function visualize(analyser) {
         capYPositionArray[i] = value;
       };
       //开始绘制频谱条
-      ctx.clearRect(i * (meterWidth + gap), cheight - capYPositionArray[i] + capHeight, meterWidth * ratio, cheight - value + capHeight);
       ctx.fillStyle = gradient;
-      ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth * ratio, cheight * ratio);
+      if (previousArray != undefined) {
+        var shangValue = previousArray[i]
+        if (shangValue < value) {
+          //继续绘制
+          ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth * ratio, value - shangValue);
+        } else if (shangValue > value) {
+          //擦除操作
+          ctx.clearRect(i * (meterWidth + gap), cheight - shangValue + capHeight, meterWidth * ratio, shangValue - value);
+        } else if (shangValue == value) {
+          //不绘制
+        }
+      } else {
+        ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth * ratio, cheight * ratio);
+      }
+      // ctx.clearRect(i * (meterWidth + gap), cheight - capYPositionArray[i] + capHeight, meterWidth * ratio, cheight - value + capHeight);
+      // ctx.fillStyle = test;
+      // ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth * ratio, cheight * ratio);
+      // ctx.fillStyle = gradient;
+      // ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth * ratio, cheight * ratio);
     }
+    previousArray = array;
     requestAnimationFrame(drawMeter);
   }
   requestAnimationFrame(drawMeter);
