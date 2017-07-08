@@ -137,8 +137,6 @@ function musicPlayAndPauseChangeHandler() {
       musicPlayer.pause();
     } else {
       musicPlayer.play();
-      setTagFromFileToSearchLyric(_src);
-      findLyric = false;
     }
   }
 }
@@ -263,11 +261,6 @@ function createInterval() {
       musicTimer.innerText = secToTimeFormat(musicPlayer.currentTime) + '/' + secToTimeFormat(musicPlayer.duration);
       controller.style.left = (musicPlayer.currentTime / musicPlayer.duration) * slider.offsetWidth - controller.offsetWidth / 2 + 'px';
       processor.style.width = (musicPlayer.currentTime / musicPlayer.duration) * slider.offsetWidth + 'px';
-      if (!findLyric) {
-        searchLyric(mO.title, mO.artist);
-        findLyric = true;
-      }
-      geci.innerText = displayLyric(currentLyric);
       if (musicPlayer.end) {
         window.clearInterval(musicDuration);
       }
@@ -429,7 +422,6 @@ function playMusicByMusicUrl(url) {
   musicPlayer.play();
   findLyric = false;
   o = getMusicObjByMusicUrl(url);
-  setTagFromFileToSearchLyric(o.path)
   o.indexElement.innerText = '♫';
   o.listElement.style.backgroundColor = '#c8c6c5'
   setCurrentTitle()
@@ -447,7 +439,6 @@ var analyser = audioCtx.createAnalyser();
 analyser.minDecibels = -90;
 analyser.maxDecibels = -10;
 analyser.smoothingTimeConstant = 0.85;
-var ratio = (window.devicePixelRatio || 1) / (canvasCtx.backingStorePixelRatio || 1);//获取当前设备设备像素比
 source.connect(analyser);
 analyser.connect(audioCtx.destination);
 visualize(analyser);
@@ -468,7 +459,9 @@ function visualize(analyser) {
   gradient.addColorStop(0, '#f00');
   var test = '#000';
   var key = true;
+  var previousArray;//上一帧频谱条位置
   var drawMeter = function () {
+    ctx.clearRect(0, 0, cwidth, cheight);
     var array = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(array);
     var step = (0.5 + array.length / meterNum) << 0; //计算采样步长
@@ -481,170 +474,46 @@ function visualize(analyser) {
       arr.push((n / step) << 0);
     }
     array = arr;
-    var previousArray;//上一帧频谱条位置
     for (var i = 0; i < meterNum; i++) {
       var value = array[i]; //获取当前能量值    * step
       if (value >= cheight) {
         value = cheight;
       }
       if (capYPositionArray.length < (0.5 + meterNum) << 0) {
-        capYPositionArray.push(value); //初始化保存帽头位置的数组，将第一个画面的数据压入其中
+        // capYPositionArray.push(value); //初始化保存帽头位置的数组，将第一个画面的数据压入其中
+        capYPositionArray = array;
       };
       ctx.fillStyle = capStyle;
       //开始绘制帽头
       if (value < capYPositionArray[i]) { //如果当前值小于之前值
-        ctx.clearRect(i * (meterWidth + gap), cheight - (capYPositionArray[i]), meterWidth * ratio, capHeight * ratio); //则使用前一次保存的值来绘制帽头
-        ctx.fillRect(i * (meterWidth + gap), cheight - (--capYPositionArray[i]), meterWidth * ratio, capHeight * ratio); //则使用前一次保存的值来绘制帽头
+        // ctx.clearRect(i * (meterWidth + gap), cheight - (capYPositionArray[i]), meterWidth, capHeight); //则使用前一次保存的值来绘制帽头
+        ctx.fillRect(i * (meterWidth + gap), cheight - (--capYPositionArray[i]), meterWidth, capHeight); //则使用前一次保存的值来绘制帽头
       } else {
-        ctx.fillRect(i * (meterWidth + gap), cheight - value, meterWidth * ratio, capHeight * ratio); //否则使用当前值直接绘制
+        ctx.fillRect(i * (meterWidth + gap), cheight - value, meterWidth, capHeight); //否则使用当前值直接绘制
         capYPositionArray[i] = value;
       };
       //开始绘制频谱条
       ctx.fillStyle = gradient;
-      if (previousArray != undefined) {
-        var shangValue = previousArray[i]
-        if (shangValue < value) {
-          //继续绘制
-          ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth * ratio, value - shangValue);
-        } else if (shangValue > value) {
-          //擦除操作
-          ctx.clearRect(i * (meterWidth + gap), cheight - shangValue + capHeight, meterWidth * ratio, shangValue - value);
-        } else if (shangValue == value) {
-          //不绘制
-        }
-      } else {
-        ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth * ratio, cheight * ratio);
-      }
-      // ctx.clearRect(i * (meterWidth + gap), cheight - capYPositionArray[i] + capHeight, meterWidth * ratio, cheight - value + capHeight);
-      // ctx.fillStyle = test;
-      // ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth * ratio, cheight * ratio);
-      // ctx.fillStyle = gradient;
-      // ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth * ratio, cheight * ratio);
+      //减少绘制和清除的区域，但是多次调用fillRect和clearRect
+      // if (previousArray != undefined) {
+      //   var shangValue = previousArray[i]
+      //   if (shangValue < value) {
+      //     //继续绘制
+      //     ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth, value - shangValue);
+      //   } else if (shangValue > value) {
+      //     //擦除操作
+      //     ctx.clearRect(i * (meterWidth + gap), cheight - shangValue + capHeight, meterWidth, shangValue - value);
+      //   } else if (shangValue == value) {
+      //     //不绘制
+      //   }
+      // } else {
+      //   ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth, cheight);
+      // }
+      ctx.fillStyle = gradient;
+      ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth, cheight);
     }
-    previousArray = array;
+    // previousArray = array;
     requestAnimationFrame(drawMeter);
   }
   requestAnimationFrame(drawMeter);
-}
-
-var lyric;
-/**
- * 获取歌词文件
- * @param {string} str 
- */
-function readLyricString(id) {
-  loadSound(id);
-  function loadSound(id) {
-    var request = new XMLHttpRequest();
-    // http://ttlyrics.com/api/download/?id=1276065271
-    url = 'http://ttlyrics.com/api/download/?id=' + id
-    request.open('GET', url, true);
-    request.responseType = 'text';
-    request.onload = function () {
-      var lyric = request.response;
-      currentLyric = decodeLyricString(lyric);
-    }
-    request.send();
-  }
-}
-
-// 
-function searchLyric(title, artist = '') {
-  if (title == '' || title == undefined) return;
-  var request = new XMLHttpRequest();
-  url = 'http://ttlyrics.com/api/search/common/?title=' + title + '&artist=' + artist
-  // console.log(url);
-  request.open('GET', url, true);
-  request.responseType = 'text';
-  request.onload = function () {
-    // var re = new RegExp('lrc.+?'+title + '.+?' + artist + '.+? id="(.+?)"');
-    var re = new RegExp('title="' + title + '" artist=".+?' + artist + '" id="(.+?)".+?/>');
-    var findOut = false;
-    (request.response).split('lrc').forEach(function (s) {
-      var result = s.match(re);
-      if (result != null && !findOut) {
-        readLyricString(result[1]);
-        findOut = true;
-      }
-
-    }, this);
-    // soundID = (request.response).match(re)[1];
-  }
-  request.send();
-}
-
-/**
- * 解析歌词返回歌词数组
- * @param {string} arr 
- * @return {[]}
- */
-function decodeLyricString(str) {
-  lyr = [];
-  var arr = str.split('\n');
-  arr.pop(arr.length - 1);
-  arr.forEach((value) => {
-    var t = lyricTimeToSec(value.match(/\[\d+:\d+\.\d+\]/g));
-    console.log(value);
-    if (t != null) {
-      var word = value.replace(/\[\d+:\d+\.\d+\]/g, '');
-      t.forEach(function (val) {
-        var li = new lyricInfo();
-        li.time = val;
-        li.words = word;
-        lyr.push(li);
-      }, this);
-    }
-  })
-  return lyr;
-}
-
-
-function lyricTimeToSec(arr) {
-  if (arr != null) {
-    var time = [];
-    arr.forEach(function (value) {
-      var a = value.match(/\d+/g);
-      time.push(toTime(a));
-    });
-  }
-  function toTime(arr) {
-    var fen = parseInt(arr[0]) * 60;
-    var miao = parseInt(arr[1]);
-    var fmiao = parseInt('0.' + arr[2]);
-    return fen + miao + fmiao
-  }
-  return time;
-}
-
-/**
- * 返回当前的歌词
- * @param {[]} lyricArray 
- */
-function displayLyric(lyricArray) {
-  var singleWord = '';
-  var deltaTime = 99999;
-  if (lyricArray.length <= 0) {
-    singleWord = '获取歌词中';
-  } else {
-    lyricArray.forEach(function (val) {
-      if (musicPlayer.currentTime - val.time >= 0 && deltaTime > musicPlayer.currentTime - val.time) {
-        deltaTime = musicPlayer.currentTime - val.time;
-        singleWord = val.words;
-      }
-    }, this);
-
-  }
-  return singleWord;
-}
-
-
-function setTagFromFileToSearchLyric(path) {
-  jsmediatags.read(path, {
-    onSuccess: function (tag) {
-      searchLyric(tag.tags.TIT2.data, tag.tags.TPE1.data);
-    },
-    onError: function (error) {
-      console.log(error);
-    }
-  });
 }
