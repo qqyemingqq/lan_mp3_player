@@ -2,7 +2,7 @@ var path = require('path');//导入node的path库
 var fs = require('fs');//导入node的fs库
 var { ipcRenderer, shell } = require('electron');
 ipcRenderer.send('put-in-tray');
-var musicIndex = 0; var jsmediatags = require("jsmediatags");
+var musicIndex = 0;
 var musicInfomation = require("./musicInfo.js");
 var lyricInfo = require("./lyricInfo.js");
 var findLyric = false;
@@ -493,7 +493,6 @@ function visualize(analyser) {
         capYPositionArray[i] = value;
       };
       //开始绘制频谱条
-      ctx.fillStyle = gradient;
       //减少绘制和清除的区域，但是多次调用fillRect和clearRect
       // if (previousArray != undefined) {
       //   var shangValue = previousArray[i]
@@ -510,7 +509,7 @@ function visualize(analyser) {
       //   ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth, cheight);
       // }
       ctx.fillStyle = gradient;
-      ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth, cheight);
+      ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth, value);
     }
     // previousArray = array;
     requestAnimationFrame(drawMeter);
