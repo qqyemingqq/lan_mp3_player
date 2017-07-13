@@ -2,8 +2,7 @@ var path = require('path');//导入node的path库
 var fs = require('fs');//导入node的fs库
 var { ipcRenderer, shell } = require('electron');
 ipcRenderer.send('put-in-tray');
-var musicIndex = 0;
-var jsmediatags = require("jsmediatags");
+var musicIndex = 0; var jsmediatags = require("jsmediatags");
 var musicInfomation = require("./musicInfo.js");
 var lyricInfo = require("./lyricInfo.js");
 var findLyric = false;
@@ -62,26 +61,6 @@ window.addEventListener('mousemove', volumeDragDropHandler);
 window.addEventListener('mouseup', dragDropHandler);
 window.addEventListener('mouseup', volumeDragDropHandler);
 
-ipcRenderer.on('ControlPlayer', (event, arg) => {
-  console.log(arg);
-  switch (arg) {
-    case 'next':
-      setNextMusicHandler();
-      break;
-    case 'previous':
-      setPreviousMusicHandler();
-      break;
-    case 'stop':
-      musicPlayAndPauseChangeHandler();
-      break;
-    case 'ramdom':
-      resetPlayerAndRandomPlayNextMusicHandler();
-      break;
-
-    default:
-      break;
-  }
-})
 /**
  * 播放上一首
  */
@@ -265,7 +244,7 @@ function createInterval() {
       controller.style.left = (musicPlayer.currentTime / musicPlayer.duration) * slider.offsetWidth - controller.offsetWidth / 2 + 'px';
       processor.style.width = (musicPlayer.currentTime / musicPlayer.duration) * slider.offsetWidth + 'px';
       if (!findLyric) {
-        setTagFromFileToSearchLyric(mO.path)
+        searchLyric(mO.title, mO.artist);
         findLyric = true;
       }
       geci.innerText = displayLyric(currentLyric);
@@ -430,6 +409,7 @@ function playMusicByMusicUrl(url) {
   musicPlayer.play();
   findLyric = false;
   o = getMusicObjByMusicUrl(url);
+  setTagFromFileToSearchLyric(o.path)
   o.indexElement.innerText = '♫';
   o.listElement.style.backgroundColor = '#c8c6c5'
   setCurrentTitle()
@@ -447,6 +427,7 @@ var analyser = audioCtx.createAnalyser();
 analyser.minDecibels = -90;
 analyser.maxDecibels = -10;
 analyser.smoothingTimeConstant = 0.85;
+var ratio = (window.devicePixelRatio || 1) / (canvasCtx.backingStorePixelRatio || 1);//获取当前设备设备像素比
 source.connect(analyser);
 analyser.connect(audioCtx.destination);
 visualize(analyser);
@@ -454,7 +435,7 @@ visualize(analyser);
 function visualize(analyser) {
   cheight = canvas.height;
   cwidth = canvas.width;
-  meterWidth = 8 //频谱条宽度
+  meterWidth = 4 //频谱条宽度
   gap = 2 //频谱条间距
   capHeight = 2
   capStyle = '#fff'
@@ -465,11 +446,8 @@ function visualize(analyser) {
   gradient.addColorStop(1, '#000f00');
   gradient.addColorStop(0.5, '#ff0');
   gradient.addColorStop(0, '#f00');
-  var test = '#000';
   var key = true;
-  var previousArray;//上一帧频谱条位置
   var drawMeter = function () {
-    ctx.clearRect(0, 0, cwidth, cheight);
     var array = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(array);
     var step = (0.5 + array.length / meterNum) << 0; //计算采样步长
@@ -488,41 +466,71 @@ function visualize(analyser) {
         value = cheight;
       }
       if (capYPositionArray.length < (0.5 + meterNum) << 0) {
-        // capYPositionArray.push(value); //初始化保存帽头位置的数组，将第一个画面的数据压入其中
-        capYPositionArray = array;
+        capYPositionArray.push(value); //初始化保存帽头位置的数组，将第一个画面的数据压入其中
       };
       ctx.fillStyle = capStyle;
       //开始绘制帽头
       if (value < capYPositionArray[i]) { //如果当前值小于之前值
-        // ctx.clearRect(i * (meterWidth + gap), cheight - (capYPositionArray[i]), meterWidth, capHeight); //则使用前一次保存的值来绘制帽头
-        ctx.fillRect(i * (meterWidth + gap), cheight - (--capYPositionArray[i]), meterWidth, capHeight); //则使用前一次保存的值来绘制帽头
+        ctx.clearRect(i * (meterWidth + gap), cheight - (capYPositionArray[i]), meterWidth * ratio, capHeight * ratio); //则使用前一次保存的值来绘制帽头
+        ctx.fillRect(i * (meterWidth + gap), cheight - (--capYPositionArray[i]), meterWidth * ratio, capHeight * ratio); //则使用前一次保存的值来绘制帽头
       } else {
-        ctx.fillRect(i * (meterWidth + gap), cheight - value, meterWidth, capHeight); //否则使用当前值直接绘制
+        ctx.fillRect(i * (meterWidth + gap), cheight - value, meterWidth * ratio, capHeight * ratio); //否则使用当前值直接绘制
         capYPositionArray[i] = value;
       };
       //开始绘制频谱条
-      //减少绘制和清除的区域，但是多次调用fillRect和clearRect
-      // if (previousArray != undefined) {
-      //   var shangValue = previousArray[i]
-      //   if (shangValue < value) {
-      //     //继续绘制
-      //     ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth, value - shangValue);
-      //   } else if (shangValue > value) {
-      //     //擦除操作
-      //     ctx.clearRect(i * (meterWidth + gap), cheight - shangValue + capHeight, meterWidth, shangValue - value);
-      //   } else if (shangValue == value) {
-      //     //不绘制
-      //   }
-      // } else {
-      //   ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth, cheight);
-      // }
+      ctx.clearRect(i * (meterWidth + gap), cheight - capYPositionArray[i] + capHeight, meterWidth * ratio, cheight - value + capHeight);
       ctx.fillStyle = gradient;
-      ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth, value);
+      ctx.fillRect(i * (meterWidth + gap), cheight - value + capHeight, meterWidth * ratio, cheight * ratio);
     }
-    // previousArray = array;
     requestAnimationFrame(drawMeter);
   }
   requestAnimationFrame(drawMeter);
+}
+
+var lyric;
+/**
+ * 获取歌词文件
+ * @param {string} str 
+ */
+function readLyricString(id) {
+  loadSound(id);
+  function loadSound(id) {
+    var request = new XMLHttpRequest();
+    // http://ttlyrics.com/api/download/?id=1276065271
+    url = 'http://ttlyrics.com/api/download/?id=' + id
+    request.open('GET', url, true);
+    request.responseType = 'text';
+    request.onload = function () {
+      var lyric = request.response;
+      currentLyric = decodeLyricString(lyric);
+    }
+    request.send();
+  }
+}
+
+// 
+function searchLyric(title, artist = '') {
+  if (title == '' || title == undefined) return;
+  var request = new XMLHttpRequest();
+  url = 'http://ttlyrics.com/api/search/common/?title=' + title + '&artist=' + artist
+  // console.log(url);
+  request.open('GET', url, true);
+  request.responseType = 'text';
+  request.onload = function () {
+    // var re = new RegExp('lrc.+?'+title + '.+?' + artist + '.+? id="(.+?)"');
+    var re = new RegExp('title="' + title + '" artist=".+?' + artist + '" id="(.+?)".+?/>');
+    var findOut = false;
+    (request.response).split('lrc').forEach(function (s) {
+      var result = s.match(re);
+      if (result != null && !findOut) {
+        readLyricString(result[1]);
+        findOut = true;
+      }
+
+    }, this);
+    // soundID = (request.response).match(re)[1];
+  }
+  request.send();
 }
 
 /**
@@ -568,55 +576,6 @@ function lyricTimeToSec(arr) {
   return time;
 }
 
-var lyric;
-/**
- * 获取歌词文件
- * @param {string} str 
- */
-function readLyricString(id) {
-  loadSound(id);
-  function loadSound(id) {
-    var request = new XMLHttpRequest();
-    // http://ttlyrics.com/api/download/?id=1276065271
-    url = 'http://ttlyrics.com/api/download/?id=' + id
-    request.open('GET', url, true);
-    request.responseType = 'text';
-    request.onload = function () {
-      var lyric = request.response;
-      console.log(lyric);
-      currentLyric = decodeLyricString(lyric);
-    }
-    request.send();
-  }
-}
-
-// 
-function searchLyric(title, artist = '') {
-  if (title == '' || title == undefined) return;
-  var request = new XMLHttpRequest();
-  url = 'http://ttlyrics.com/api/search/common/?title=' + title + '&artist=' + artist
-  console.log(url);
-  request.open('GET', url, true);
-  request.responseType = 'text';
-  request.onload = function () {
-    // var re = new RegExp('lrc.+?'+title + '.+?' + artist + '.+? id="(.+?)"');
-    var re = new RegExp('title="' + title + '" artist=".+?' + artist + '" id="(.+?)".+?/>');
-    var findOut = false;
-    (request.response).split('lrc').forEach(function (s) {
-      var result = s.match(re);
-      if (result != null && !findOut) {
-        console.log(result);
-        readLyricString(result[1]);
-        findOut = true;
-      }
-
-    }, this);
-    // soundID = (request.response).match(re)[1];
-  }
-  request.send();
-}
-
-
 /**
  * 返回当前的歌词
  * @param {[]} lyricArray 
@@ -642,7 +601,6 @@ function displayLyric(lyricArray) {
 function setTagFromFileToSearchLyric(path) {
   jsmediatags.read(path, {
     onSuccess: function (tag) {
-      console.log(tag);
       searchLyric(tag.tags.TIT2.data, tag.tags.TPE1.data);
     },
     onError: function (error) {
