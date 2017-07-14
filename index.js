@@ -536,7 +536,6 @@ function decodeLyricString(str) {
   arr.pop(arr.length - 1);
   arr.forEach((value) => {
     var t = lyricTimeToSec(value.match(/\[\d+:\d+\.\d+\]/g));
-    console.log(value);
     if (t != null) {
       var word = value.replace(/\[\d+:\d+\.\d+\]/g, '');
       t.forEach(function (val) {
@@ -574,44 +573,31 @@ var lyric;
  * @param {string} str 
  */
 function readLyricString(id) {
-  loadSound(id);
-  function loadSound(id) {
-    var request = new XMLHttpRequest();
-    // http://ttlyrics.com/api/download/?id=1276065271
-    url = 'http://ttlyrics.com/api/download/?id=' + id
+  var request = new XMLHttpRequest();
+    url = "http://music.163.com/api/song/lyric?os=osx&id="+id+"&lv=-1&kv=-1&tv=-1";
     request.open('GET', url, true);
-    request.responseType = 'text';
+    request.responseType='json';
     request.onload = function () {
-      var lyric = request.response;
-      console.log(lyric);
-      currentLyric = decodeLyricString(lyric);
+      currentLyric = decodeLyricString(request.response.lrc.lyric);
     }
     request.send();
-  }
 }
 
 // 
 function searchLyric(title, artist = '') {
   if (title == '' || title == undefined) return;
   var request = new XMLHttpRequest();
-  url = 'http://ttlyrics.com/api/search/common/?title=' + title + '&artist=' + artist
-  console.log(url);
-  request.open('GET', url, true);
-  request.responseType = 'text';
+  url = 'http://music.163.com/api/search/get/'+'?s='+title+'&limit=20&type=1&offset=0';
+  request.open('POST', url, true);
+  // request.setRequestHeader('Cookie','appver=1.5.2;');
+  document.cookie = 'appver=1.5.2;';
+  request.responseType = 'json';
   request.onload = function () {
     // var re = new RegExp('lrc.+?'+title + '.+?' + artist + '.+? id="(.+?)"');
-    var re = new RegExp('title="' + title + '" artist=".+?' + artist + '" id="(.+?)".+?/>');
+    // var re = new RegExp('title="' + title + '" artist=".+?' + artist + '" id="(.+?)".+?/>');
     var findOut = false;
-    (request.response).split('lrc').forEach(function (s) {
-      var result = s.match(re);
-      if (result != null && !findOut) {
-        console.log(result);
-        readLyricString(result[1]);
-        findOut = true;
-      }
-
-    }, this);
-    // soundID = (request.response).match(re)[1];
+    var id = request.response.result.songs[0].id;
+    readLyricString(id);
   }
   request.send();
 }
@@ -642,7 +628,6 @@ function displayLyric(lyricArray) {
 function setTagFromFileToSearchLyric(path) {
   jsmediatags.read(path, {
     onSuccess: function (tag) {
-      console.log(tag);
       searchLyric(tag.tags.TIT2.data, tag.tags.TPE1.data);
     },
     onError: function (error) {
