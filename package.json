@@ -14,6 +14,6 @@
     }
   },
   "dependencies": {
-    "jsmediatags": "^3.5.0"
+    "jsmediatags": "^3.6.1"
   }
 }
