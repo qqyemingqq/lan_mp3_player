@@ -150,7 +150,7 @@ function musicPlayAndPauseChangeHandler() {
 function folderSelectedHandler(event) {
   addMusicFiles(event.target.files);
   dirUrl.innerText = event.target.files[0].path;
-  // currentLyric=[];
+  currentLyric = [];
   geci.innerText = '';
   dirUrl.addEventListener('click', () => {
     shell.showItemInFolder(dirUrl.innerText)
@@ -574,30 +574,42 @@ var lyric;
  */
 function readLyricString(id) {
   var request = new XMLHttpRequest();
-    url = "http://music.163.com/api/song/lyric?os=osx&id="+id+"&lv=-1&kv=-1&tv=-1";
-    request.open('GET', url, true);
-    request.responseType='json';
-    request.onload = function () {
-      currentLyric = decodeLyricString(request.response.lrc.lyric);
+  url = "http://music.163.com/api/song/lyric?os=osx&id=" + id + "&lv=-1&kv=-1&tv=-1";
+  request.open('GET', url, true);
+  request.responseType = 'json';
+  request.onload = function () {
+    console.log(request.response);
+    if (request.response.uncollected === true) {
+        console.log(currentLyric);
+        failToFindLyric();
+        throw 'Error Lyric'
+      } else {
+      if (request.response.lrc.lyric) {
+        currentLyric = decodeLyricString(request.response.lrc.lyric);
+      }
     }
-    request.send();
+  }
+  request.send();
 }
 
 // 
 function searchLyric(title, artist = '') {
   if (title == '' || title == undefined) return;
   var request = new XMLHttpRequest();
-  url = 'http://music.163.com/api/search/get/'+'?s='+title+'&limit=20&type=1&offset=0';
+  url = 'http://music.163.com/api/search/get/' + '?s=' + title + '&limit=20&type=1&offset=0';
   request.open('POST', url, true);
-  // request.setRequestHeader('Cookie','appver=1.5.2;');
   document.cookie = 'appver=1.5.2;';
   request.responseType = 'json';
   request.onload = function () {
-    // var re = new RegExp('lrc.+?'+title + '.+?' + artist + '.+? id="(.+?)"');
-    // var re = new RegExp('title="' + title + '" artist=".+?' + artist + '" id="(.+?)".+?/>');
     var findOut = false;
-    var id = request.response.result.songs[0].id;
-    readLyricString(id);
+    console.log(request.response);
+    if (request.response.result.songCount > 0) {
+      var id = request.response.result.songs[0].id;
+      readLyricString(id);
+    } else {
+      failToFindLyric();
+    }
+
   }
   request.send();
 }
@@ -628,10 +640,20 @@ function displayLyric(lyricArray) {
 function setTagFromFileToSearchLyric(path) {
   jsmediatags.read(path, {
     onSuccess: function (tag) {
-      searchLyric(tag.tags.TIT2.data, tag.tags.TPE1.data);
+      console.log(tag);
+      if (tag.tags.TIT2.data && tag.tags.TPE1.data) {
+        searchLyric(tag.tags.TIT2.data, tag.tags.TPE1.data);
+      } else {
+        failToFindLyric();
+      }
     },
     onError: function (error) {
       console.log(error);
+      failToFindLyric();
     }
   });
+}
+
+function failToFindLyric() {
+  currentLyric = [{ time: 0, words: '找不到歌词' }];
 }
