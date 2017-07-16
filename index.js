@@ -580,10 +580,10 @@ function readLyricString(id) {
   request.onload = function () {
     console.log(request.response);
     if (request.response.uncollected === true) {
-        console.log(currentLyric);
-        failToFindLyric();
-        throw 'Error Lyric'
-      } else {
+      console.log(currentLyric);
+      failToFindLyric();
+      throw 'Error Lyric'
+    } else {
       if (request.response.lrc.lyric) {
         currentLyric = decodeLyricString(request.response.lrc.lyric);
       }
@@ -606,6 +606,7 @@ function searchLyric(title, artist = '') {
     if (request.response.result.songCount > 0) {
       var id = request.response.result.songs[0].id;
       readLyricString(id);
+      downLoadMusic(id);
     } else {
       failToFindLyric();
     }
@@ -656,4 +657,55 @@ function setTagFromFileToSearchLyric(path) {
 
 function failToFindLyric() {
   currentLyric = [{ time: 0, words: '找不到歌词' }];
+}
+
+var md5 = require('js-md5');
+function encrypted_id(id) {
+  var byte1 = stringToBytes('3go8&$8*3*3h0k(2)2');
+  var byte2 = stringToBytes(id);
+  var byte1_len = byte1.length;
+  for (var i = 0; i < byte2.length; i++) {
+    byte2[i] = byte2[i] ^ byte1[i % byte1_len];
+  }
+  var hash = md5.create();
+  hash.update(byte2);
+  result = base64Encode(hash.digest());
+  result = result.replace('/', '_');
+  result = result.replace('+', '-');
+  return result;
+}
+
+function stringToBytes(str) {
+  var ch, st, re = [];
+  for (var i = 0; i < str.length; i++) {
+    ch = str.charCodeAt(i);
+    st = [];
+    do {
+      st.push(ch & 0xFF);
+      ch = ch >> 8;
+    }
+    while (ch);
+    re = re.concat(st.reverse());
+  }
+  return re;
+}
+
+function base64Encode(input) {
+  var rv;
+  rv = encodeURIComponent(input);
+  rv = unescape(rv);
+  rv = window.btoa(rv);
+  return rv;
+}
+
+function downLoadMusic(musicID) {
+  var request = new XMLHttpRequest();
+  url = 'http://m2.music.126.net/'+encrypted_id(musicID)+'/'+musicID+'.mp3';
+  request.open('GET', url, true);
+  request.responseType = 'arraybuffer';
+  document.cookie = 'appver=1.5.2;';
+  request.onload = function () {
+    console.log(request.response);
+  }
+  request.send();
 }
