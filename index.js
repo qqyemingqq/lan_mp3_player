@@ -578,7 +578,7 @@ function readLyricString(id) {
   request.open('GET', url, true);
   request.responseType = 'json';
   request.onload = function () {
-    console.log(request.response);
+    // console.log(request.response);
     if (request.response.uncollected === true) {
       console.log(currentLyric);
       failToFindLyric();
@@ -641,7 +641,7 @@ function displayLyric(lyricArray) {
 function setTagFromFileToSearchLyric(path) {
   jsmediatags.read(path, {
     onSuccess: function (tag) {
-      console.log(tag);
+      // console.log(tag);
       if (tag.tags.TIT2.data && tag.tags.TPE1.data) {
         searchLyric(tag.tags.TIT2.data, tag.tags.TPE1.data);
       } else {
@@ -649,7 +649,7 @@ function setTagFromFileToSearchLyric(path) {
       }
     },
     onError: function (error) {
-      console.log(error);
+      // console.log(error);
       failToFindLyric();
     }
   });
@@ -666,16 +666,18 @@ function encrypted_id(id) {
   var byte1_len = byte1.length;
   for (var i = 0; i < byte2.length; i++) {
     byte2[i] = byte2[i] ^ byte1[i % byte1_len];
+    console.log(byte2[i]);
   }
   var hash = md5.create();
   hash.update(byte2);
-  result = base64Encode(hash.digest());
+  result = (new Buffer(hash.digest())).toString('base64');
   result = result.replace('/', '_');
   result = result.replace('+', '-');
   return result;
 }
 
 function stringToBytes(str) {
+  str = str.toString();
   var ch, st, re = [];
   for (var i = 0; i < str.length; i++) {
     ch = str.charCodeAt(i);
@@ -698,14 +700,37 @@ function base64Encode(input) {
   return rv;
 }
 
+function downLoadMusicFromUrl(url) {
+  var request = new XMLHttpRequest();
+  request.open('GET', url, true);
+  request.responseType = 'blob';
+  document.cookie = 'appver=1.5.2;';
+  document.referrer = 'http://music.163.com/';
+  request.onload = function () {
+    // fs.writeFileSync('music.mp3',request.response,function (err) {
+    //   console.log(err);
+    // });
+    console.log(request.response);
+    // var f = fs.createWriteStream('music.mp3');
+    // f.write(request.response);
+    // f.end();
+
+  }
+  request.send();
+}
+
 function downLoadMusic(musicID) {
   var request = new XMLHttpRequest();
-  url = 'http://m2.music.126.net/'+encrypted_id(musicID)+'/'+musicID+'.mp3';
+  // url = 'http://music.163.com/api/song/enhance/player/url?id=' + musicID;
+  url = 'http://music.163.com/api/song/enhance/download/url?br=320000&id=' + musicID;
   request.open('GET', url, true);
-  request.responseType = 'arraybuffer';
+  request.responseType = 'json';
   document.cookie = 'appver=1.5.2;';
+  document.referrer = 'http://music.163.com/';
+  console.log(url);
   request.onload = function () {
-    console.log(request.response);
+    console.log(request.response.data.url);
+    downLoadMusicFromUrl(request.response.data.url);
   }
   request.send();
 }
