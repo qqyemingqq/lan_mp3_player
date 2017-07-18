@@ -699,24 +699,15 @@ function base64Encode(input) {
   rv = window.btoa(rv);
   return rv;
 }
-
+var request = require('request')
 function downLoadMusicFromUrl(url) {
-  var request = new XMLHttpRequest();
-  request.open('GET', url, true);
-  request.responseType = 'blob';
-  document.cookie = 'appver=1.5.2;';
-  document.referrer = 'http://music.163.com/';
-  request.onload = function () {
-    // fs.writeFileSync('music.mp3',request.response,function (err) {
-    //   console.log(err);
-    // });
-    console.log(request.response);
-    // var f = fs.createWriteStream('music.mp3');
-    // f.write(request.response);
-    // f.end();
-
-  }
-  request.send();
+  request(url)
+    .pipe(fs.createWriteStream(path.join(__dirname, 'title' + ".mp3")))
+    .on("error", function (err) {
+    })
+    .on("close", () => {
+      console.log('title', " is downloaded!");
+    })
 }
 
 function downLoadMusic(musicID) {
