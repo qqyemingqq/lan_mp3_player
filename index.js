@@ -659,46 +659,7 @@ function failToFindLyric() {
   currentLyric = [{ time: 0, words: '找不到歌词' }];
 }
 
-var md5 = require('js-md5');
-function encrypted_id(id) {
-  var byte1 = stringToBytes('3go8&$8*3*3h0k(2)2');
-  var byte2 = stringToBytes(id);
-  var byte1_len = byte1.length;
-  for (var i = 0; i < byte2.length; i++) {
-    byte2[i] = byte2[i] ^ byte1[i % byte1_len];
-    console.log(byte2[i]);
-  }
-  var hash = md5.create();
-  hash.update(byte2);
-  result = (new Buffer(hash.digest())).toString('base64');
-  result = result.replace('/', '_');
-  result = result.replace('+', '-');
-  return result;
-}
 
-function stringToBytes(str) {
-  str = str.toString();
-  var ch, st, re = [];
-  for (var i = 0; i < str.length; i++) {
-    ch = str.charCodeAt(i);
-    st = [];
-    do {
-      st.push(ch & 0xFF);
-      ch = ch >> 8;
-    }
-    while (ch);
-    re = re.concat(st.reverse());
-  }
-  return re;
-}
-
-function base64Encode(input) {
-  var rv;
-  rv = encodeURIComponent(input);
-  rv = unescape(rv);
-  rv = window.btoa(rv);
-  return rv;
-}
 var request = require('request')
 function downLoadMusicFromUrl(url) {
   request(url)
