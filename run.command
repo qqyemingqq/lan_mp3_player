@@ -1,1 +1,1 @@
-/Applications/Electron.app/Contents/MacOS/Electron ~/Desktop/lan_mp3_player
+/Applications/Electron.app/Contents/MacOS/Electron /Users/ye/github/lan_mp3_player

@@ -1,5 +1,5 @@
 {
-  "name": "小明播放器",
+  "name": "Mp3Player",
   "version": "0.1.0",
   "main": "main.js",
   "description": "lan music player",
@@ -14,10 +14,7 @@
     }
   },
   "dependencies": {
-    "base64": "^2.1.0",
-    "js-md5": "^0.5.0",
     "jsmediatags": "^3.6.1",
-    "md5": "^2.2.1",
     "request": "^2.82.0"
   }
 }

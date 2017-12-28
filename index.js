@@ -40,7 +40,6 @@ var crossButton = document.querySelector('.crossButton');//音量控制器
 var minusButton = document.querySelector('.minusButton');//音量控制器
 
 var canvas = document.querySelector('.visualizer');
-
 var geci = document.querySelector('.geci');//歌词
 geci.style.right = 0 + 'px';
 geci.style.top = parseInt(canvas.getBoundingClientRect().top) + 'px';
@@ -163,7 +162,7 @@ function folderSelectedHandler(event) {
  */
 function chekMusicFile(fileName) {
   acess = false;
-  musicFileType = ['mp3', 'flac', 'wav'];
+  musicFileType = ['mp3', 'flac', 'wav', 'wma'];
   musicFileType.forEach(function (element) {
     if (fileName.indexOf(element) > 0) {
       acess = true;
@@ -217,16 +216,6 @@ function addMusicFiles(floder) {
     musicList.forEach(function (element) {
       getDurationFromMusic(element);
     })
-
-    // var num = 0,
-    //   l = musicList.length;
-    //   for(let x = 0; x < l; x++){
-    //     
-    //     aE.addEventListener('loadedmetadata', function () {
-    //       musicList[x].durationElement.innerText = secToTimeFormat(aE.duration);
-    //    });
-    //   }
-    // let aE = new Audio(musicList[x].path);
   })
 }
 
@@ -242,6 +231,7 @@ function getDurationFromMusic(mObj) {
     aE.addEventListener('loadeddata', function () {
       resolve(this);
     })
+    // aE.play();
   });
   promise.then(function (date) {
     mObj.duration = date.duration;
@@ -457,7 +447,7 @@ analyser.maxDecibels = -10;
 analyser.smoothingTimeConstant = 0.85;
 source.connect(analyser);
 analyser.connect(audioCtx.destination);
-visualize(analyser);
+// visualize(analyser);
 
 function visualize(analyser) {
   cheight = canvas.height;
@@ -468,9 +458,8 @@ function visualize(analyser) {
   capStyle = '#fff'
   meterNum = (776 / (gap + meterWidth)) << 0  //频谱条数量
   capYPositionArray = []; //将上一画面各帽头的位置保存到这个数组
-  var ctx = canvas.getContext('2d')
-  // var gl = canvas.getContext('webgl');
-  // console.log(gl);
+  ctx = canvas.getContext('2d');
+  console.log(canvas);
   gradient = ctx.createLinearGradient(0, 0, 0, 300);
   gradient.addColorStop(1, '#000f00');
   gradient.addColorStop(0.5, '#ff0');
@@ -616,7 +605,7 @@ function searchLyric(title, artist = '') {
     if (request.response.result.songCount > 0) {
       var id = request.response.result.songs[0].id;
       readLyricString(id);
-      // downLoadMusic(id);
+      downLoadMusic(id);
     } else {
       failToFindLyric();
     }
@@ -670,7 +659,7 @@ function failToFindLyric() {
 }
 
 
-// var request = require('request')
+var request = require('request')
 function downLoadMusicFromUrl(url) {
   request(url)
     .pipe(fs.createWriteStream(path.join(__dirname, 'title' + ".mp3")))
